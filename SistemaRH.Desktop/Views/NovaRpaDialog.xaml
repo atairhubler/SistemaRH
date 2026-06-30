@@ -1,0 +1,97 @@
+<Window x:Class="SistemaRH.Desktop.Views.NovaRpaDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nova RPA / NF" Height="500" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Cabeçalho -->
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="15">
+            <TextBlock Text="Registrar Nova RPA / Nota Fiscal" Foreground="{DynamicResource HeaderForeground}" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <!-- Formulário -->
+        <ScrollViewer Grid.Row="1" Padding="20">
+            <StackPanel>
+                <!-- Funcionário PJ -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Funcionário PJ *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                    <ComboBox Name="FuncionarioPJCombo" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Tipo Documento -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Tipo de Documento *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                    <ComboBox Name="TipoDocumentoCombo" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1">
+                        <ComboBoxItem>RPA</ComboBoxItem>
+                        <ComboBoxItem>NF-e</ComboBoxItem>
+                        <ComboBoxItem>Recibo</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Número Documento -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Número do Documento *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                    <TextBox Name="NumeroDocumentoTxt" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Competência -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="Mês *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <ComboBox Name="MesCombo" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1">
+                            <ComboBoxItem>1</ComboBoxItem>
+                            <ComboBoxItem>2</ComboBoxItem>
+                            <ComboBoxItem>3</ComboBoxItem>
+                            <ComboBoxItem>4</ComboBoxItem>
+                            <ComboBoxItem>5</ComboBoxItem>
+                            <ComboBoxItem>6</ComboBoxItem>
+                            <ComboBoxItem>7</ComboBoxItem>
+                            <ComboBoxItem>8</ComboBoxItem>
+                            <ComboBoxItem>9</ComboBoxItem>
+                            <ComboBoxItem>10</ComboBoxItem>
+                            <ComboBoxItem>11</ComboBoxItem>
+                            <ComboBoxItem>12</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                        <TextBlock Text="Ano *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <TextBox Name="AnoTxt" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Valor Bruto -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Valor Bruto *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                    <TextBox Name="ValorBrutoTxt" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Status Pagamento -->
+                <StackPanel>
+                    <TextBlock Text="Status de Pagamento" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                    <ComboBox Name="StatusCombo" Padding="10" Height="40" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1">
+                        <ComboBoxItem>Pendente</ComboBoxItem>
+                        <ComboBoxItem>Pago</ComboBoxItem>
+                        <ComboBoxItem>Cancelado</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Botões -->
+        <Border Grid.Row="2" Padding="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancelar" Padding="15,8" Background="{DynamicResource BtnDangerBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" Margin="0,0,10,0" Click="Cancelar_Click"/>
+                <Button Content="Salvar" Padding="15,8" Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" Click="Salvar_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

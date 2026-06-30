@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SistemaRH.Application/SistemaRH.Application.csproj" />
+  <Project Path="SistemaRH.Data/SistemaRH.Data.csproj" />
+  <Project Path="SistemaRH.Desktop/SistemaRH.Desktop.csproj" />
+  <Project Path="SistemaRH.Domain/SistemaRH.Domain.csproj" />
+  <Project Path="SistemaRH.Tests/SistemaRH.Tests.csproj" />
+</Solution>

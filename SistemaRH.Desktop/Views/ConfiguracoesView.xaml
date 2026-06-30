@@ -1,0 +1,249 @@
+<UserControl x:Class="SistemaRH.Desktop.Views.ConfiguracoesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Título -->
+        <TextBlock Grid.Row="0" Text="Configurações" FontSize="24" FontWeight="Bold" Margin="20,20,20,15" Foreground="{DynamicResource AccentBlueForeground}"/>
+
+        <!-- Seções (scrollável) -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20,0,20,20">
+
+                <!-- Seção: Aparência -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="🎨 Tema de Cores" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Escolha a cor primária da interface (disponível no modo claro)." FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,20"/>
+
+                        <StackPanel Orientation="Horizontal">
+
+                            <!-- Azul -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Azul"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#1E3A8A">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsAzul, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Azul" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsAzul}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#1E3A8A"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Verde -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Verde"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#064E3B">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsVerde, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Verde" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsVerde}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#064E3B"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Roxo -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Roxo"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#4C1D95">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsRoxo, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Roxo" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRoxo}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#4C1D95"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Laranja -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Laranja"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#78350F">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsLaranja, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Laranja" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsLaranja}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#78350F"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Rosa -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Rosa"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#881337">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsRosa, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Rosa" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRosa}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#881337"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Vermelho -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Vermelho"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#7F1D1D">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsVermelho, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Vermelho" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsVermelho}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#7F1D1D"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Cinza -->
+                            <Button Command="{Binding SelecionarCorCommand}" CommandParameter="Cinza"
+                                    Background="Transparent" BorderThickness="0" Cursor="Hand"
+                                    Padding="4" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <Border Width="38" Height="38" CornerRadius="19" Background="#1E293B">
+                                        <TextBlock Text="✓" FontSize="15" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Visibility="{Binding IsCinza, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                    </Border>
+                                    <TextBlock Text="Cinza" HorizontalAlignment="Center" Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextLabel}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsCinza}" Value="True">
+                                                        <Setter Property="FontWeight" Value="Bold"/>
+                                                        <Setter Property="Foreground" Value="#1E293B"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Backup Section -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="💾 Backup e Restauração" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,15"/>
+                        <TextBlock Text="Crie um backup completo do sistema (dados + configurações) em um único arquivo .zip. Para restaurar, basta selecionar o arquivo gerado." FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,15"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="📥 Criar Backup Agora" Padding="15,10" Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" Margin="0,0,10,0" Command="{Binding BackupCommand}"/>
+                            <Button Content="📤 Restaurar Backup" Padding="15,10" Background="{DynamicResource BtnDangerBackground}" Foreground="{DynamicResource BtnForeground}" Margin="0,0,10,0" Command="{Binding RestaurarBackupCommand}"
+                                    ToolTip="Selecione um arquivo .db de backup para restaurar os dados"/>
+                            <Button Content="📂 Abrir Pasta de Backups" Padding="15,10" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding AbrirPastaBackupCommand}"/>
+                        </StackPanel>
+
+                        <TextBlock FontSize="11" Foreground="{DynamicResource TextFaint}" Margin="0,15,0,0" TextWrapping="Wrap">
+                            O arquivo <Run FontWeight="SemiBold">.zip</Run> contém o banco de dados, as configurações de tema e as tabelas de INSS/IRRF.
+                            Ao restaurar, uma cópia de segurança do estado atual é criada automaticamente na pasta <Run FontWeight="SemiBold">Backups</Run> dentro da pasta do aplicativo.
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Google Drive Section -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="☁️ Google Drive" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,15"/>
+                        <TextBlock Text="Faça upload dos seus backups para o Google Drive manualmente para manter uma cópia em nuvem." FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="1. Clique em 'Criar Backup Agora' para gerar um arquivo de backup" FontSize="11" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,8"/>
+                        <TextBlock Text="2. Acesse o Google Drive (drive.google.com)" FontSize="11" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,8"/>
+                        <TextBlock Text="3. Crie uma pasta chamada 'SistemaRH_Backups'" FontSize="11" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,8"/>
+                        <TextBlock Text="4. Faça upload dos arquivos .db da pasta de backups para o Google Drive" FontSize="11" Foreground="{DynamicResource TextMuted}"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Status -->
+        <Border Grid.Row="2" Background="{DynamicResource StatusBarBackground}" BorderBrush="{DynamicResource BorderStatusBar}" BorderThickness="0,1,0,0" Padding="10,10,10,5" Margin="20,0,20,0">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextMuted}" FontSize="12"/>
+        </Border>
+    </Grid>
+</UserControl>

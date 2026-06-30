@@ -1,0 +1,100 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Backgrounds -->
+    <SolidColorBrush x:Key="AppBackground" Color="#111827"/>
+    <SolidColorBrush x:Key="SurfaceBackground" Color="#1F2937"/>
+    <SolidColorBrush x:Key="CardBackground" Color="#1E293B"/>
+    <SolidColorBrush x:Key="ActionBarBackground" Color="#1E293B"/>
+    <SolidColorBrush x:Key="StatusBarBackground" Color="#111827"/>
+    <SolidColorBrush x:Key="InputBackground" Color="#374151"/>
+    <SolidColorBrush x:Key="SalaryPrefixBackground" Color="#374151"/>
+    <SolidColorBrush x:Key="DataGridBackground" Color="#1F2937"/>
+    <SolidColorBrush x:Key="AlternatingRowBackground" Color="#111827"/>
+
+    <!-- Header -->
+    <SolidColorBrush x:Key="HeaderBackground" Color="#0F172A"/>
+    <SolidColorBrush x:Key="HeaderForeground" Color="White"/>
+    <SolidColorBrush x:Key="HeaderSubForeground" Color="#60A5FA"/>
+    <SolidColorBrush x:Key="HeaderSubForeground2" Color="#BFDBFE"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimary" Color="#F9FAFB"/>
+    <SolidColorBrush x:Key="TextLabel" Color="#D1D5DB"/>
+    <SolidColorBrush x:Key="TextMuted" Color="#9CA3AF"/>
+    <SolidColorBrush x:Key="TextFaint" Color="#6B7280"/>
+
+    <!-- Borders -->
+    <SolidColorBrush x:Key="BorderDefault" Color="#4B5563"/>
+    <SolidColorBrush x:Key="BorderCard" Color="#374151"/>
+    <SolidColorBrush x:Key="BorderActionBar" Color="#374151"/>
+    <SolidColorBrush x:Key="BorderStatusBar" Color="#374151"/>
+
+    <!-- Buttons -->
+    <SolidColorBrush x:Key="BtnNavBackground" Color="#2563EB"/>
+    <SolidColorBrush x:Key="BtnPrimaryBackground" Color="#2563EB"/>
+    <SolidColorBrush x:Key="BtnSettingsBackground" Color="#4B5563"/>
+    <SolidColorBrush x:Key="BtnSuccessBackground" Color="#059669"/>
+    <SolidColorBrush x:Key="BtnDangerBackground" Color="#DC2626"/>
+    <SolidColorBrush x:Key="BtnExportBackground" Color="#047857"/>
+    <SolidColorBrush x:Key="BtnCancelBackground" Color="#475569"/>
+    <SolidColorBrush x:Key="BtnForeground" Color="White"/>
+    <SolidColorBrush x:Key="BtnThemeBackground" Color="#93C5FD"/>
+
+    <!-- Accent Cards -->
+    <SolidColorBrush x:Key="AccentBlueBackground" Color="#1E3A5F"/>
+    <SolidColorBrush x:Key="AccentBlueBorder" Color="#2563EB"/>
+    <SolidColorBrush x:Key="AccentBlueForeground" Color="#93C5FD"/>
+    <SolidColorBrush x:Key="AccentGreenBackground" Color="#064E3B"/>
+    <SolidColorBrush x:Key="AccentGreenBorder" Color="#059669"/>
+    <SolidColorBrush x:Key="AccentGreenForeground" Color="#34D399"/>
+    <SolidColorBrush x:Key="AccentPinkBackground" Color="#4A0A2E"/>
+    <SolidColorBrush x:Key="AccentPinkBorder" Color="#BE185D"/>
+    <SolidColorBrush x:Key="AccentPinkForeground" Color="#F472B6"/>
+    <SolidColorBrush x:Key="AccentYellowBackground" Color="#451A03"/>
+    <SolidColorBrush x:Key="AccentYellowBorder" Color="#D97706"/>
+    <SolidColorBrush x:Key="AccentYellowForeground" Color="#FCD34D"/>
+
+    <!-- Semantic Values -->
+    <SolidColorBrush x:Key="ValueGreen" Color="#34D399"/>
+    <SolidColorBrush x:Key="ValueRed" Color="#F87171"/>
+    <SolidColorBrush x:Key="ValueBlue" Color="#60A5FA"/>
+    <SolidColorBrush x:Key="ValuePink" Color="#F472B6"/>
+    <SolidColorBrush x:Key="ValueAmber" Color="#FCD34D"/>
+    <SolidColorBrush x:Key="ValueDark" Color="#F9FAFB"/>
+
+    <!-- DataGrid Styles -->
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="#111827"/>
+        <Setter Property="Foreground" Value="#D1D5DB"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="BorderBrush" Value="#374151"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+    </Style>
+    <Style TargetType="DataGridRow">
+        <Setter Property="Foreground" Value="#F9FAFB"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#1E3A5F"/>
+                <Setter Property="Foreground" Value="#93C5FD"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#1E293B"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="DataGridCell">
+        <Setter Property="Foreground" Value="#F9FAFB"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>
