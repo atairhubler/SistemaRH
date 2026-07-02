@@ -16,4 +16,5 @@ public class Ferias
     // Navegação
     public Funcionario Funcionario { get; set; }
     public ICollection<PeriodoFerias> Periodos { get; set; } = new List<PeriodoFerias>();
+    public ICollection<PeriodoAquisitivo> PeriodosAquisitivos { get; set; } = new List<PeriodoAquisitivo>();
 }

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SistemaRH.Desktop"
              xmlns:conv="clr-namespace:SistemaRH.Desktop.Converters"
-             StartupUri="MainWindow.xaml">
+             ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -11,6 +11,8 @@
             </ResourceDictionary.MergedDictionaries>
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <conv:StatusPeriodoAquisitivoToTextoConverter x:Key="StatusPeriodoAquisitivoToTextoConverter"/>
+            <conv:StatusPeriodoAquisitivoToCorConverter x:Key="StatusPeriodoAquisitivoToCorConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

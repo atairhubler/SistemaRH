@@ -11,12 +11,14 @@ namespace SistemaRH.Desktop.ViewModels;
 public class FuncionariosViewModel : BaseViewModel
 {
     private readonly IFuncionarioService _funcionarioService;
+    private readonly IExcelImportService _excelImportService;
     private readonly IDialogService _dialogService;
 
     private List<FuncionarioDto> _todosFuncionarios = new();
     private ObservableCollection<FuncionarioDto> _funcionarios;
     private FuncionarioDto _selectedFuncionario;
     private string _filtroTipo = "Todos";
+    private string _filtroStatus = "Ativos";
     private string _filtroNome = "";
 
     public ObservableCollection<FuncionarioDto> Funcionarios
@@ -37,6 +39,16 @@ public class FuncionariosViewModel : BaseViewModel
         set => SetProperty(ref _filtroTipo, value);
     }
 
+    public string FiltroStatus
+    {
+        get => _filtroStatus;
+        set
+        {
+            if (SetProperty(ref _filtroStatus, value))
+                AplicarFiltro();
+        }
+    }
+
     public string FiltroNome
     {
         get => _filtroNome;
@@ -51,14 +63,18 @@ public class FuncionariosViewModel : BaseViewModel
     public ICommand RefreshCommand { get; }
     public ICommand NovoCommand { get; }
     public ICommand EditarCommand { get; }
-    public ICommand DeletarCommand { get; }
+    public ICommand AtivarCommand { get; }
+    public ICommand DesativarCommand { get; }
     public ICommand ExportarCsvCommand { get; }
+    public ICommand ImportarPlanilhaCommand { get; }
 
     public FuncionariosViewModel(
         IFuncionarioService funcionarioService,
+        IExcelImportService excelImportService,
         IDialogService dialogService)
     {
         _funcionarioService = funcionarioService;
+        _excelImportService = excelImportService;
         _dialogService = dialogService;
 
         Funcionarios = new ObservableCollection<FuncionarioDto>();
@@ -67,8 +83,10 @@ public class FuncionariosViewModel : BaseViewModel
         RefreshCommand = new RelayCommand(_ => _ = CarregarAsync());
         NovoCommand = new RelayCommand(_ => NovoFuncionario());
         EditarCommand = new RelayCommand(param => _ = EditarFuncionario(param as FuncionarioDto));
-        DeletarCommand = new RelayCommand(param => _ = DeletarFuncionario(param as FuncionarioDto));
+        AtivarCommand = new RelayCommand(param => _ = AtivarFuncionario(param as FuncionarioDto));
+        DesativarCommand = new RelayCommand(param => _ = DesativarFuncionario(param as FuncionarioDto));
         ExportarCsvCommand = new RelayCommand(_ => _ = ExportarCsvAsync());
+        ImportarPlanilhaCommand = new RelayCommand(_ => _ = ImportarPlanilhaAsync());
 
         _ = CarregarAsync();
     }
@@ -84,12 +102,12 @@ public class FuncionariosViewModel : BaseViewModel
             {
                 "CLT" => await _funcionarioService.GetAllCltAsync(),
                 "PJ" => await _funcionarioService.GetAllPJAsync(),
+                "Estagiário" => await _funcionarioService.GetAllEstagiarioAsync(),
                 _ => await _funcionarioService.GetAllAsync()
             };
 
             _todosFuncionarios = dados.ToList();
             AplicarFiltro();
-            StatusMessage = $"{Funcionarios.Count} funcionário(s) encontrado(s)";
         }
         catch (Exception ex)
         {
@@ -104,10 +122,18 @@ public class FuncionariosViewModel : BaseViewModel
 
     private void AplicarFiltro()
     {
-        var filtrados = string.IsNullOrWhiteSpace(_filtroNome)
-            ? _todosFuncionarios
-            : _todosFuncionarios.Where(f =>
-                f.Nome?.Contains(_filtroNome, StringComparison.OrdinalIgnoreCase) == true).ToList();
+        IEnumerable<FuncionarioDto> filtrados = _todosFuncionarios;
+
+        filtrados = _filtroStatus switch
+        {
+            "Ativos" => filtrados.Where(f => f.IsAtivo),
+            "Inativos" => filtrados.Where(f => !f.IsAtivo),
+            _ => filtrados
+        };
+
+        if (!string.IsNullOrWhiteSpace(_filtroNome))
+            filtrados = filtrados.Where(f =>
+                f.Nome?.Contains(_filtroNome, StringComparison.OrdinalIgnoreCase) == true);
 
         Funcionarios = new ObservableCollection<FuncionarioDto>(filtrados);
         StatusMessage = $"{Funcionarios.Count} funcionário(s) encontrado(s)";
@@ -129,6 +155,13 @@ public class FuncionariosViewModel : BaseViewModel
                 var vm = App.ServiceProvider.GetService(typeof(FuncionarioCLTDetailViewModel)) as FuncionarioCLTDetailViewModel;
                 vm?.PrepararNovo();
                 var dialog = new Views.FuncionarioCLTDetailView();
+                dialog.ShowDialog();
+            }
+            else if (tipo == "Estagiario")
+            {
+                var vm = App.ServiceProvider.GetService(typeof(FuncionarioEstagiarioDetailViewModel)) as FuncionarioEstagiarioDetailViewModel;
+                vm?.PrepararNovo();
+                var dialog = new Views.FuncionarioEstagiarioDetailView();
                 dialog.ShowDialog();
             }
             else
@@ -165,29 +198,52 @@ public class FuncionariosViewModel : BaseViewModel
             var dialog = new Views.FuncionarioPJDetailView();
             dialog.ShowDialog();
         }
+        else if (funcionario is FuncionarioEstagiarioDto estagiarioDto)
+        {
+            var vm = App.ServiceProvider.GetService(typeof(FuncionarioEstagiarioDetailViewModel)) as FuncionarioEstagiarioDetailViewModel;
+            vm?.PrepararEdicao(estagiarioDto);
+            var dialog = new Views.FuncionarioEstagiarioDetailView();
+            dialog.ShowDialog();
+        }
 
         await CarregarAsync();
     }
 
-    private async Task DeletarFuncionario(FuncionarioDto? funcionario)
+    private async Task AtivarFuncionario(FuncionarioDto? funcionario)
+    {
+        if (funcionario == null) return;
+
+        try
+        {
+            IsLoading = true;
+            await _funcionarioService.AtivarAsync(funcionario.Id);
+            await CarregarAsync();
+        }
+        catch (Exception ex)
+        {
+            await _dialogService.ShowErrorAsync("Erro", ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task DesativarFuncionario(FuncionarioDto? funcionario)
     {
         if (funcionario == null) return;
 
         var confirma = await _dialogService.ShowConfirmAsync(
-            "Confirmar Exclusão",
-            $"Deseja excluir {funcionario.Nome}?");
+            "Confirmar Desativação",
+            $"Deseja desativar {funcionario.Nome}?");
 
         if (!confirma) return;
 
         try
         {
             IsLoading = true;
-            var resultado = await _funcionarioService.DeleteAsync(funcionario.Id);
-            if (resultado)
-            {
-                await _dialogService.ShowInfoAsync("Sucesso", "Funcionário excluído com sucesso.");
-                await CarregarAsync();
-            }
+            await _funcionarioService.DesativarAsync(funcionario.Id);
+            await CarregarAsync();
         }
         catch (Exception ex)
         {
@@ -235,6 +291,40 @@ public class FuncionariosViewModel : BaseViewModel
         catch (Exception ex)
         {
             await _dialogService.ShowErrorAsync("Erro ao exportar", ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task ImportarPlanilhaAsync()
+    {
+        var caminho = await _dialogService.AbrirArquivoAsync("Arquivos Excel|*.xlsx");
+        if (string.IsNullOrEmpty(caminho)) return;
+
+        try
+        {
+            IsLoading = true;
+            StatusMessage = "Importando planilha...";
+
+            var resultado = await _excelImportService.ImportarAgilTelecomAsync(caminho);
+
+            var mensagem = $"PJ: {resultado.PjImportados} importados, {resultado.PjIgnorados} já existentes\n" +
+                           $"CLT: {resultado.CltImportados} importados, {resultado.CltIgnorados} já existentes\n" +
+                           $"Estagiários: {resultado.EstagiarioImportados} importados, {resultado.EstagiarioIgnorados} já existentes";
+
+            if (resultado.Avisos.Count > 0)
+                mensagem += "\n\nAvisos:\n" + string.Join("\n", resultado.Avisos);
+
+            await _dialogService.ShowInfoAsync("Importação concluída", mensagem);
+            StatusMessage = "Importação concluída";
+            await CarregarAsync();
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Erro ao importar: {ex.Message}";
+            await _dialogService.ShowErrorAsync("Erro ao importar", ex.Message);
         }
         finally
         {

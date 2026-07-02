@@ -19,6 +19,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly RelatorioComparativoViewModel _relatorioViewModel;
     private readonly ConfiguracoesViewModel _configuracoesViewModel;
     private readonly FolhaPagamentoViewModel _folhaPagamentoViewModel;
+    private readonly AuditoriaViewModel _auditoriaViewModel;
     private readonly ConfiguracaoService _configService;
 
     public UserControl CurrentView
@@ -42,6 +43,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand FeriasCommand { get; }
     public ICommand RpaNfCommand { get; }
     public ICommand RelatoriosCommand { get; }
+    public ICommand AuditoriaCommand { get; }
     public ICommand ConfiguracoesCommand { get; }
     public ICommand FolhaPagamentoCommand { get; }
     public ICommand AlternarTemaCommand { get; }
@@ -55,6 +57,7 @@ public class MainWindowViewModel : BaseViewModel
         RelatorioComparativoViewModel relatorioViewModel,
         ConfiguracoesViewModel configuracoesViewModel,
         FolhaPagamentoViewModel folhaPagamentoViewModel,
+        AuditoriaViewModel auditoriaViewModel,
         ConfiguracaoService configService)
     {
         _dashboardViewModel = dashboardViewModel;
@@ -65,6 +68,7 @@ public class MainWindowViewModel : BaseViewModel
         _relatorioViewModel = relatorioViewModel;
         _configuracoesViewModel = configuracoesViewModel;
         _folhaPagamentoViewModel = folhaPagamentoViewModel;
+        _auditoriaViewModel = auditoriaViewModel;
         _configService = configService;
 
         _modoEscuro = configService.ModoEscuro;
@@ -76,6 +80,7 @@ public class MainWindowViewModel : BaseViewModel
         FeriasCommand = new RelayCommand(_ => MostrarFerias());
         RpaNfCommand = new RelayCommand(_ => MostrarRpaNf());
         RelatoriosCommand = new RelayCommand(_ => MostrarRelatorios());
+        AuditoriaCommand = new RelayCommand(_ => MostrarAuditoria());
         ConfiguracoesCommand = new RelayCommand(_ => MostrarConfiguracoes());
         FolhaPagamentoCommand = new RelayCommand(_ => MostrarFolhaPagamento());
         AlternarTemaCommand = new RelayCommand(_ => AlternarTema());
@@ -108,6 +113,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new FeriasView { DataContext = _feriasViewModel };
         StatusMessage = "Férias";
+        _ = _feriasViewModel.CarregarAsync();
     }
 
     private void MostrarRpaNf()
@@ -120,6 +126,13 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new RelatorioComparativoView { DataContext = _relatorioViewModel };
         StatusMessage = "Relatórios";
+    }
+
+    private void MostrarAuditoria()
+    {
+        CurrentView = new AuditoriaView { DataContext = _auditoriaViewModel };
+        StatusMessage = "Auditoria";
+        _ = _auditoriaViewModel.CarregarAsync();
     }
 
     private void MostrarConfiguracoes()

@@ -1,0 +1,75 @@
+<Window x:Class="SistemaRH.Desktop.Views.HistoricoSalarialView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="{Binding Titulo}" Height="560" Width="620" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="15">
+            <TextBlock Text="{Binding Titulo}" Foreground="{DynamicResource HeaderForeground}" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <!-- Novo lançamento -->
+        <Border Grid.Row="1" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="15,15,15,0">
+            <StackPanel>
+                <TextBlock Text="Registrar novo reajuste" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="Data" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <DatePicker SelectedDate="{Binding NovaData}" Padding="8" Height="36"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <TextBlock Text="Motivo" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding NovoMotivo, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
+                                 BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="5,0,0,0">
+                        <TextBlock Text="{Binding RotuloValor, StringFormat='Novo {0}'}" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding NovoValor, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
+                                 BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Text="Observações" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,10,0,5"/>
+                <TextBox Text="{Binding NovaObservacao, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
+                         BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                <Button Content="+ Registrar" Command="{Binding AdicionarCommand}" Padding="12,8" Margin="0,10,0,0"
+                        Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}"
+                        HorizontalAlignment="Left"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Lista -->
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Historico}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  SelectionMode="Single" GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column" RowHeight="36"
+                  Background="{DynamicResource DataGridBackground}"
+                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                  BorderThickness="0" Margin="15,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Data" Binding="{Binding DataVigencia, StringFormat=dd/MM/yyyy}" Width="100"/>
+                <DataGridTextColumn Header="Motivo" Binding="{Binding Motivo}" Width="*" MinWidth="140"/>
+                <DataGridTextColumn Header="Valor" Binding="{Binding SalarioBruto, StringFormat='{}{0:C2}'}" Width="120"/>
+                <DataGridTextColumn Header="Observações" Binding="{Binding Observacoes}" Width="*" MinWidth="140"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="3" Padding="15">
+            <Button Content="Fechar" Padding="15,8" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" HorizontalAlignment="Right" Command="{Binding FecharCommand}"/>
+        </Border>
+    </Grid>
+</Window>

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using SistemaRH.Application.DTOs;
 using SistemaRH.Application.Interfaces;
 using SistemaRH.Desktop.Services;
+using SistemaRH.Domain.Enums;
 
 namespace SistemaRH.Desktop.ViewModels;
 
@@ -104,16 +105,24 @@ public class DashboardViewModel : BaseViewModel
             CustoCLTMensal = clts.Sum(c => (c as FuncionarioCLTDto)?.SalarioBruto ?? 0);
             CustoPJMensal = 0;
 
-            var limiteFerias = DateTime.Now.AddMonths(-12);
-            var alertas = clts
-                .OfType<FuncionarioCLTDto>()
-                .Where(c => c.DataDemissao == null && c.DataAdmissao <= limiteFerias)
-                .Select(c =>
-                {
-                    var meses = (int)((DateTime.Now - c.DataAdmissao).TotalDays / 30.44);
-                    return $"{c.Nome} — {meses} meses sem férias";
-                })
-                .ToList();
+            var alertas = new List<string>();
+            foreach (var funcionario in todos.Where(f => f.IsAtivo))
+            {
+                if (!await _feriasService.EhElegivelAsync(funcionario.Id))
+                    continue;
+
+                await _feriasService.GarantirPeriodosAsync(funcionario.Id);
+                var periodos = await _feriasService.GetPeriodosAquisitivosAsync(funcionario.Id);
+                var problematico = periodos
+                    .Where(p => p.Status == StatusPeriodoAquisitivo.Pendente || p.Status == StatusPeriodoAquisitivo.Vencido)
+                    .OrderBy(p => p.NumeroPeriodo)
+                    .FirstOrDefault();
+
+                if (problematico == null) continue;
+
+                var rotulo = problematico.Status == StatusPeriodoAquisitivo.Vencido ? "vencidas" : "pendentes";
+                alertas.Add($"{funcionario.Nome} — férias {rotulo} (período aquisitivo nº {problematico.NumeroPeriodo})");
+            }
 
             FuncionariosAlertaFerias = new ObservableCollection<string>(alertas);
             TemAlertaFerias = alertas.Count > 0;

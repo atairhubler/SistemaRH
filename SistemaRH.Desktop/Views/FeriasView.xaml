@@ -7,101 +7,208 @@
     <Grid Background="{DynamicResource SurfaceBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Título -->
         <TextBlock Grid.Row="0" Text="Gestão de Férias" FontSize="24" FontWeight="Bold" Margin="20,20,20,15" Foreground="{DynamicResource AccentBlueForeground}"/>
 
-        <!-- Seleção de Funcionário -->
-        <Grid Grid.Row="1" Margin="20,0,20,15">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <TabControl Grid.Row="1" Margin="20,0,20,10" Background="{DynamicResource SurfaceBackground}" BorderThickness="0">
 
-            <ComboBox Grid.Column="0" ItemsSource="{Binding Funcionarios}"
-                      SelectedItem="{Binding SelectedFuncionario}"
-                      DisplayMemberPath="Nome" Padding="10" Height="40"/>
-            <Button Grid.Column="1" Content="📊 Calcular Direito" Padding="10,5" Margin="10,0,0,0"
-                    Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"
-                    Command="{Binding CalcularCommand}"/>
-        </Grid>
+            <!-- ABA: Períodos Aquisitivos -->
+            <TabItem Header="Períodos Aquisitivos">
+                <Grid Margin="0,15,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-        <!-- Painel de Férias -->
-        <Grid Grid.Row="2" Margin="20,0,20,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Row="0" ItemsSource="{Binding Funcionarios}"
+                              SelectedItem="{Binding SelectedFuncionario}"
+                              DisplayMemberPath="Nome" Padding="10" Height="40" Margin="0,0,0,15"
+                              HorizontalAlignment="Left" MinWidth="320"/>
 
-            <!-- Info Férias (esquerda) -->
-            <Border Grid.Column="0" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,0,10,0">
-                <StackPanel>
-                    <TextBlock Text="Informações de Férias" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,15"/>
+                    <TextBlock Grid.Row="1" Text="{Binding StatusMessage}" FontSize="14" Foreground="{DynamicResource TextMuted}"
+                               Visibility="{Binding Elegivel, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+                               TextWrapping="Wrap" VerticalAlignment="Top" Margin="0,10,0,0"/>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Dias Disponíveis:" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
-                        <TextBlock Text="{Binding FeriasAtual.DiasDisponiveis, StringFormat='{}{0} dias'}"
-                                  FontSize="20" FontWeight="Bold" Foreground="{DynamicResource ValueGreen}"/>
-                    </StackPanel>
+                    <Grid Grid.Row="1" Visibility="{Binding Elegivel, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Dias Utilizados:" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
-                        <TextBlock Text="{Binding FeriasAtual.DiasUtilizados, StringFormat='{}{0} dias'}"
-                                  FontSize="18" Foreground="{DynamicResource ValueRed}"/>
-                    </StackPanel>
+                        <!-- Lista de períodos aquisitivos -->
+                        <DataGrid Grid.Column="0" ItemsSource="{Binding Periodos}" SelectedItem="{Binding SelectedPeriodo}"
+                                  AutoGenerateColumns="False" IsReadOnly="True"
+                                  CanUserAddRows="False" CanUserDeleteRows="False"
+                                  SelectionMode="Single" GridLinesVisibility="Horizontal"
+                                  HeadersVisibility="Column" RowHeight="34"
+                                  Background="{DynamicResource DataGridBackground}"
+                                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                  BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" Margin="0,0,10,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Nº" Binding="{Binding NumeroPeriodo}" Width="35"/>
+                                <DataGridTextColumn Header="Início" Binding="{Binding DataInicio, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                <DataGridTextColumn Header="Fim" Binding="{Binding DataFim, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                <DataGridTextColumn Header="Limite de Uso" Binding="{Binding DataLimiteUso, StringFormat=dd/MM/yyyy}" Width="100"/>
+                                <DataGridTextColumn Header="Usufruídos" Binding="{Binding DiasUsufruidos}" Width="80"/>
+                                <DataGridTextColumn Header="Abono" Binding="{Binding DiasAbono}" Width="60"/>
+                                <DataGridTextColumn Header="Pendentes" Binding="{Binding DiasPendentes}" Width="80"/>
+                                <DataGridTextColumn Header="Status" Width="110">
+                                    <DataGridTextColumn.Binding>
+                                        <Binding Path="Status" Converter="{StaticResource StatusPeriodoAquisitivoToTextoConverter}"/>
+                                    </DataGridTextColumn.Binding>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="Foreground">
+                                                <Setter.Value>
+                                                    <Binding Path="Status" Converter="{StaticResource StatusPeriodoAquisitivoToCorConverter}"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Dias Remunerados:" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
-                        <TextBlock Text="{Binding FeriasAtual.DiasRemunerados, StringFormat='{}{0} dias'}"
-                                  FontSize="18" Foreground="{DynamicResource TextPrimary}"/>
-                    </StackPanel>
+                        <!-- Usos do período selecionado + formulário de novo uso -->
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" Visibility="{Binding TemPeriodoSelecionado, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Uso do período" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,10"/>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Dias Não Remunerados:" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
-                        <TextBlock Text="{Binding FeriasAtual.DiasNaoRemunerados, StringFormat='{}{0} dias'}"
-                                  FontSize="18" Foreground="{DynamicResource TextPrimary}"/>
-                    </StackPanel>
+                            <DataGrid ItemsSource="{Binding Usos}" AutoGenerateColumns="False" IsReadOnly="True"
+                                      CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="150"
+                                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="30"
+                                      Background="{DynamicResource DataGridBackground}"
+                                      AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                      BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" Margin="0,0,0,15">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Início" Binding="{Binding DataInicio, StringFormat=dd/MM/yyyy}" Width="80"/>
+                                    <DataGridTextColumn Header="Fim" Binding="{Binding DataFim, StringFormat=dd/MM/yyyy}" Width="80"/>
+                                    <DataGridTextColumn Header="Dias" Binding="{Binding Dias}" Width="45"/>
+                                    <DataGridTextColumn Header="Tipo" Binding="{Binding TipoUso}" Width="*"/>
+                                    <DataGridTemplateColumn Header="" Width="30">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="✕" Padding="4,0" Background="Transparent" BorderThickness="0"
+                                                        Foreground="{DynamicResource ValueRed}"
+                                                        Command="{Binding DataContext.RemoverUsoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
 
-                    <StackPanel Margin="0,10,0,0">
-                        <TextBlock Text="Saldo Disponível:" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
-                        <TextBlock Text="{Binding FeriasAtual.SaldoDisponivel, StringFormat='{}{0} dias'}"
-                                  FontSize="24" FontWeight="Bold" Foreground="{DynamicResource ValueBlue}"/>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
+                            <TextBlock Text="Registrar novo uso" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,10"/>
 
-            <!-- Adicionar Período (direita) -->
-            <Border Grid.Column="1" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="10,0,0,0">
-                <StackPanel>
-                    <TextBlock Text="Adicionar Período de Férias" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,15"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                                    <TextBlock Text="Início" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                                    <DatePicker SelectedDate="{Binding NovoUsoInicio}" Padding="8" Height="36"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                                    <TextBlock Text="Fim" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                                    <DatePicker SelectedDate="{Binding NovoUsoFim}" Padding="8" Height="36"/>
+                                </StackPanel>
+                            </Grid>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Data Inicial:" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
-                        <DatePicker SelectedDate="{Binding DataInicio}" Padding="10" Height="40"
-                                   BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
-                    </StackPanel>
+                            <StackPanel Margin="0,0,0,10">
+                                <TextBlock Text="Tipo de uso" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding OpcoesTipoUso}" DisplayMemberPath="Rotulo" SelectedValuePath="Valor"
+                                          SelectedValue="{Binding NovoUsoTipo}" Padding="8" Height="36"/>
+                            </StackPanel>
 
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Data Final:" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
-                        <DatePicker SelectedDate="{Binding DataFim}" Padding="10" Height="40"
-                                   BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
-                    </StackPanel>
+                            <CheckBox Content="Remunerada" IsChecked="{Binding NovoUsoRemunerada}" Padding="10,5" Margin="0,0,0,10"/>
 
-                    <CheckBox Content="Férias Remuneradas" IsChecked="{Binding Remunerada}" Padding="10,5" Margin="0,0,0,15"/>
+                            <StackPanel Margin="0,0,0,10" Visibility="{Binding EhClt, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <TextBlock Text="Nº de dependentes (IR)" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding NumeroDependentes, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
+                                         BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                            </StackPanel>
 
-                    <Button Content="➕ Adicionar Período" Padding="10,8"
-                           Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}"
-                           Command="{Binding AdicionarPeriodoCommand}"/>
-                </StackPanel>
-            </Border>
-        </Grid>
+                            <Button Content="+ Registrar Uso" Command="{Binding AdicionarUsoCommand}" Padding="12,8"
+                                    Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}"
+                                    HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
 
-        <!-- Status -->
-        <Border Grid.Row="3" Background="{DynamicResource StatusBarBackground}" BorderBrush="{DynamicResource BorderStatusBar}" BorderThickness="0,1,0,0" Padding="10,10,10,5" Margin="20,15,20,0">
+            <!-- ABA: Calendário da Equipe -->
+            <TabItem Header="Calendário da Equipe">
+                <Grid Margin="0,15,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="‹" FontSize="18" Padding="12,4" Command="{Binding MesAnteriorCommand}"
+                                Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding TituloCalendario}" FontSize="18" FontWeight="Bold"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
+                        <Button Grid.Column="2" Content="›" FontSize="18" Padding="12,4" Command="{Binding MesProximoCommand}"
+                                Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"/>
+                    </Grid>
+
+                    <UniformGrid Grid.Row="1" Columns="7" Margin="0,0,0,5">
+                        <TextBlock Text="Dom" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Seg" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Ter" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Qua" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Qui" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Sex" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="Sáb" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                    </UniformGrid>
+
+                    <ItemsControl Grid.Row="2" ItemsSource="{Binding DiasCalendario}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="7"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource BorderCard}" BorderThickness="0.5" Padding="6" MinHeight="70">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding TemFerias}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ForaDoMes}" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Dia}" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}"
+                                                   Visibility="{Binding ForaDoMes, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                                        <TextBlock Text="{Binding Funcionarios}" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource AccentBlueForeground}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="2" Background="{DynamicResource StatusBarBackground}" BorderBrush="{DynamicResource BorderStatusBar}" BorderThickness="0,1,0,0" Padding="10,10,10,5" Margin="20,0,20,10">
             <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextMuted}" FontSize="12"/>
         </Border>
     </Grid>

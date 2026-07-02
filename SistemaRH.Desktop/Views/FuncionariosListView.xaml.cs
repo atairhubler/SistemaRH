@@ -17,4 +17,11 @@ public partial class FuncionariosListView : UserControl
         vm.FiltroTipo = item?.Content?.ToString() ?? "Todos";
         _ = vm.CarregarAsync();
     }
+
+    private void FiltroStatus_Changed(object sender, SelectionChangedEventArgs e)
+    {
+        if (DataContext is not FuncionariosViewModel vm) return;
+        var item = (sender as ComboBox)?.SelectedItem as ComboBoxItem;
+        vm.FiltroStatus = item?.Content?.ToString() ?? "Ativos";
+    }
 }

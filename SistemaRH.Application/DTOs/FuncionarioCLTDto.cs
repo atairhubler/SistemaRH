@@ -3,6 +3,8 @@ namespace SistemaRH.Application.DTOs;
 public class FuncionarioCLTDto : FuncionarioDto
 {
     public string Cpf { get; set; }
+    public string Rg { get; set; }
+    public string Codigo { get; set; }
     public DateTime DataNascimento { get; set; }
     public string Cargo { get; set; }
     public string Departamento { get; set; }
@@ -11,4 +13,8 @@ public class FuncionarioCLTDto : FuncionarioDto
     public string Ctps { get; set; }
     public string PisPassep { get; set; }
     public decimal SalarioBruto { get; set; }
+    public decimal ComplementoSalarial { get; set; }
+    public decimal AuxilioEducacao { get; set; }
+
+    public decimal TotalAtual => SalarioBruto + ComplementoSalarial + AjudaDeCusto + AuxilioEducacao;
 }

@@ -34,7 +34,7 @@ public class FolhaPagamentoService : IFolhaPagamentoService
     }
 
     // INSS progressivo: cada faixa incide sobre a parcela do salário dentro do intervalo
-    private static decimal CalcularINSS(decimal salario, TabelasFolhaConfig tabelas)
+    internal static decimal CalcularINSS(decimal salario, TabelasFolhaConfig tabelas)
     {
         decimal inss = 0;
         decimal limiteAnterior = 0;
@@ -49,7 +49,7 @@ public class FolhaPagamentoService : IFolhaPagamentoService
     }
 
     // IRRF tabela simplificada: alíquota sobre a base inteira menos dedução fixa
-    private static decimal CalcularIRRF(decimal baseCalculo, TabelasFolhaConfig tabelas)
+    internal static decimal CalcularIRRF(decimal baseCalculo, TabelasFolhaConfig tabelas)
     {
         var faixas = tabelas.FaixasIRRF.OrderBy(f => f.LimiteSuperior).ToList();
         foreach (var faixa in faixas)

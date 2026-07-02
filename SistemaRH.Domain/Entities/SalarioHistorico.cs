@@ -10,9 +10,10 @@ public class SalarioHistorico
     public decimal DescontoIRPF { get; set; }
     public decimal DescontoOutros { get; set; }
     public decimal SalarioLiquido { get; set; }
+    public string Motivo { get; set; }
     public string Observacoes { get; set; }
     public DateTime DataCriacao { get; set; }
 
     // Navegação
-    public FuncionarioCLT Funcionario { get; set; }
+    public Funcionario Funcionario { get; set; }
 }

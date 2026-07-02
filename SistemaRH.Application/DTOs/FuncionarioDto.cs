@@ -9,12 +9,24 @@ public abstract class FuncionarioDto
     public TipoFuncionario Tipo { get; set; }
     public string Nome { get; set; }
     public string Email { get; set; }
+    public string EmailAgil { get; set; }
+    public string Contratante { get; set; }
     public string Telefone { get; set; }
     public string Endereco { get; set; }
+    public string Complemento { get; set; }
     public string Cidade { get; set; }
     public string Estado { get; set; }
     public string Cep { get; set; }
     public StatusFuncionario Status { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime? DataAtualizacao { get; set; }
+
+    public string Genero { get; set; }
+    public string Ramal { get; set; }
+    public string DadosBancarios { get; set; }
+    public bool Comissionado { get; set; }
+    public string Observacoes { get; set; }
+    public decimal AjudaDeCusto { get; set; }
+
+    public bool IsAtivo => Status == StatusFuncionario.Ativo;
 }

@@ -25,7 +25,7 @@ public class EmpresaDetailViewModel : BaseViewModel
     private string _email = "";
 
     public string RazaoSocial { get => _razaoSocial; set => SetProperty(ref _razaoSocial, value); }
-    public string Cnpj { get => _cnpj; set => SetProperty(ref _cnpj, value); }
+    public string Cnpj { get => _cnpj; set => SetProperty(ref _cnpj, FormatarCnpj(value)); }
     public string InscricaoEstadual { get => _inscricaoEstadual; set => SetProperty(ref _inscricaoEstadual, value); }
     public string Endereco { get => _endereco; set => SetProperty(ref _endereco, value); }
     public string Cidade { get => _cidade; set => SetProperty(ref _cidade, value); }
@@ -127,4 +127,20 @@ public class EmpresaDetailViewModel : BaseViewModel
     }
 
     public Action? FecharJanela { get; set; }
+
+    private static string FormatarCnpj(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return "";
+        var digits = new string(value.Where(char.IsDigit).ToArray());
+        if (digits.Length > 14) digits = digits[..14];
+
+        return digits.Length switch
+        {
+            <= 2 => digits,
+            <= 5 => $"{digits[0..2]}.{digits[2..]}",
+            <= 8 => $"{digits[0..2]}.{digits[2..5]}.{digits[5..]}",
+            <= 12 => $"{digits[0..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..]}",
+            _ => $"{digits[0..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..12]}-{digits[12..]}"
+        };
+    }
 }

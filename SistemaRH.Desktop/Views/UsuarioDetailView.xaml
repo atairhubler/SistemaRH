@@ -1,0 +1,39 @@
+<Window x:Class="SistemaRH.Desktop.Views.UsuarioDetailView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="{Binding Titulo}" Height="380" Width="420" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="15">
+            <TextBlock Text="{Binding Titulo}" Foreground="{DynamicResource HeaderForeground}" FontSize="18" FontWeight="Bold"/>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="20">
+            <TextBlock Text="Nome de usuário *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+            <TextBox Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="40" Text="{Binding NomeUsuario, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="Senha" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,15,0,5"/>
+            <PasswordBox x:Name="PwdSenha" Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="40" PasswordChanged="PwdSenha_PasswordChanged"/>
+
+            <TextBlock Text="Confirmar senha" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,15,0,5"/>
+            <PasswordBox x:Name="PwdConfirmar" Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="40" PasswordChanged="PwdConfirmar_PasswordChanged"/>
+
+            <TextBlock Text="{Binding DicaSenha}" FontSize="11" Foreground="{DynamicResource TextMuted}" Margin="0,8,0,0"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Padding="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancelar" Padding="15,8" Background="{DynamicResource BtnDangerBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" Margin="0,0,10,0" Command="{Binding CancelarCommand}"/>
+                <Button Content="Salvar" Padding="15,8" Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" Command="{Binding SalvarCommand}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

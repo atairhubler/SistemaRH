@@ -231,11 +231,29 @@ namespace SistemaRH.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("AjudaDeCusto")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cep")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Comissionado")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Complemento")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Contratante")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DadosBancarios")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -246,6 +264,10 @@ namespace SistemaRH.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EmailAgil")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -260,7 +282,19 @@ namespace SistemaRH.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Genero")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Observacoes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Ramal")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -290,6 +324,78 @@ namespace SistemaRH.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("SistemaRH.Domain.Entities.LogAuditoria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Acao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataHora")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Entidade")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Usuario")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ValoresAntes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ValoresDepois")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DataHora");
+
+                    b.ToTable("LogsAuditoria");
+                });
+
+            modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoAquisitivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataLimiteUso")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DiasDireito")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FeriasId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NumeroPeriodo")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeriasId");
+
+                    b.ToTable("PeriodosAquisitivos");
+                });
+
             modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoFerias", b =>
                 {
                     b.Property<int>("Id")
@@ -311,15 +417,23 @@ namespace SistemaRH.Data.Migrations
                     b.Property<int>("FeriasId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("PeriodoAquisitivoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("Remunerada")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TipoUso")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FeriasId");
+
+                    b.HasIndex("PeriodoAquisitivoId");
 
                     b.ToTable("PeriodosFerias");
                 });
@@ -434,6 +548,10 @@ namespace SistemaRH.Data.Migrations
                     b.Property<int>("FuncionarioId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Observacoes")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -451,43 +569,166 @@ namespace SistemaRH.Data.Migrations
                     b.ToTable("SalarioHistorico");
                 });
 
+            modelBuilder.Entity("SistemaRH.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NomeUsuario")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NomeUsuario")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
+                });
+
             modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioCLT", b =>
                 {
                     b.HasBaseType("SistemaRH.Domain.Entities.Funcionario");
 
+                    b.Property<decimal>("AuxilioEducacao")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Cargo")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Cargo");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Codigo");
+
+                    b.Property<decimal>("ComplementoSalarial")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("ComplementoSalarial");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Cpf");
 
                     b.Property<string>("Ctps")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataAdmissao")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataAdmissao");
 
                     b.Property<DateTime?>("DataDemissao")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataDemissao");
 
                     b.Property<DateTime>("DataNascimento")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataNascimento");
 
                     b.Property<string>("Departamento")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Departamento");
 
                     b.Property<string>("PisPassep")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Rg")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Rg");
+
                     b.Property<decimal>("SalarioBruto")
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioEstagiario", b =>
+                {
+                    b.HasBaseType("SistemaRH.Domain.Entities.Funcionario");
+
+                    b.Property<decimal>("Bolsa")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Cargo")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Cargo");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Codigo");
+
+                    b.Property<decimal>("ComplementoSalarial")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("ComplementoSalarial");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Cpf");
+
+                    b.Property<DateTime>("DataAdmissao")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataAdmissao");
+
+                    b.Property<DateTime?>("DataDemissao")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataDemissao");
+
+                    b.Property<DateTime>("DataNascimento")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataNascimento");
+
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Departamento");
+
+                    b.Property<string>("Rg")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Rg");
+
+                    b.HasDiscriminator().HasValue(3);
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioPJ", b =>
@@ -498,6 +739,30 @@ namespace SistemaRH.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DataFim")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DataInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataNascimento")
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("DataNascimento");
+
+                    b.Property<string>("Departamento")
+                        .IsRequired()
+                        .ValueGeneratedOnUpdateSometimes()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Departamento");
+
+                    b.Property<string>("DiaSolicitacaoNF")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmiteNF")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("FeriasRemuneradas")
                         .HasColumnType("INTEGER");
 
@@ -505,8 +770,26 @@ namespace SistemaRH.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TelefoneAgil")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("TemDireitoFerias")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("TipoServico")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ValidadeContrato")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ValorContratado")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ValorServico")
+                        .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -563,6 +846,17 @@ namespace SistemaRH.Data.Migrations
                     b.Navigation("Empresa");
                 });
 
+            modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoAquisitivo", b =>
+                {
+                    b.HasOne("SistemaRH.Domain.Entities.Ferias", "Ferias")
+                        .WithMany("PeriodosAquisitivos")
+                        .HasForeignKey("FeriasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ferias");
+                });
+
             modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoFerias", b =>
                 {
                     b.HasOne("SistemaRH.Domain.Entities.Ferias", "Ferias")
@@ -571,7 +865,14 @@ namespace SistemaRH.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SistemaRH.Domain.Entities.PeriodoAquisitivo", "PeriodoAquisitivo")
+                        .WithMany("Usos")
+                        .HasForeignKey("PeriodoAquisitivoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Ferias");
+
+                    b.Navigation("PeriodoAquisitivo");
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.RpaNfPJ", b =>
@@ -603,8 +904,8 @@ namespace SistemaRH.Data.Migrations
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.SalarioHistorico", b =>
                 {
-                    b.HasOne("SistemaRH.Domain.Entities.FuncionarioCLT", "Funcionario")
-                        .WithMany("HistoricoSalario")
+                    b.HasOne("SistemaRH.Domain.Entities.Funcionario", "Funcionario")
+                        .WithMany()
                         .HasForeignKey("FuncionarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -625,6 +926,8 @@ namespace SistemaRH.Data.Migrations
             modelBuilder.Entity("SistemaRH.Domain.Entities.Ferias", b =>
                 {
                     b.Navigation("Periodos");
+
+                    b.Navigation("PeriodosAquisitivos");
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.Funcionario", b =>
@@ -635,9 +938,9 @@ namespace SistemaRH.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioCLT", b =>
+            modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoAquisitivo", b =>
                 {
-                    b.Navigation("HistoricoSalario");
+                    b.Navigation("Usos");
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioPJ", b =>
