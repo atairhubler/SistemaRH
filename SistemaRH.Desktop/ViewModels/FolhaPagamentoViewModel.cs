@@ -16,6 +16,7 @@ public class FolhaPagamentoViewModel : BaseViewModel
     private readonly IFolhaPagamentoService _folhaService;
     private readonly IDialogService _dialogService;
     private readonly TabelasFolhaService _tabelasService;
+    private readonly IAuditoriaService _auditoriaService;
 
     // Fonte estável — nunca substituída, só populada. Isso garante que o ItemsSource
     // do ComboBox não mude de referência ao filtrar, evitando o reset do Text pelo WPF.
@@ -89,12 +90,14 @@ public class FolhaPagamentoViewModel : BaseViewModel
         IFuncionarioService funcionarioService,
         IFolhaPagamentoService folhaService,
         IDialogService dialogService,
-        TabelasFolhaService tabelasService)
+        TabelasFolhaService tabelasService,
+        IAuditoriaService auditoriaService)
     {
         _funcionarioService = funcionarioService;
         _folhaService = folhaService;
         _dialogService = dialogService;
         _tabelasService = tabelasService;
+        _auditoriaService = auditoriaService;
 
         Funcionarios = CollectionViewSource.GetDefaultView(_fonte);
         Funcionarios.Filter = FiltrarItem;
@@ -223,6 +226,10 @@ public class FolhaPagamentoViewModel : BaseViewModel
 
             ws.Columns().AdjustToContents();
             wb.SaveAs(caminho);
+
+            await _auditoriaService.RegistrarAsync("Geração", "Folha de Pagamento",
+                $"Holerite gerado para {Resultado.NomeFuncionario} — competência {Resultado.Competencia}");
+
             await _dialogService.ShowInfoAsync("Exportar", $"Holerite exportado com sucesso!\n{caminho}");
             StatusMessage = "Holerite exportado.";
         }

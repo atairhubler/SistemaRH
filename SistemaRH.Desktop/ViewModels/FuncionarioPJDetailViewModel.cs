@@ -39,7 +39,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     }
 
     public string RazaoSocial { get => _razaoSocial; set => SetProperty(ref _razaoSocial, value); }
-    public string CNPJ { get => _cnpj; set => SetProperty(ref _cnpj, value); }
+    public string CNPJ { get => _cnpj; set => SetProperty(ref _cnpj, FormatarCnpj(value)); }
     public string Email { get => _email; set => SetProperty(ref _email, value); }
     public string Telefone { get => _telefone; set => SetProperty(ref _telefone, FormatarTelefone(value)); }
     public bool TemDireitoFerias { get => _temDireitoFerias; set => SetProperty(ref _temDireitoFerias, value); }
@@ -167,6 +167,22 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
             11 => $"({digits[0..2]}) {digits[2..7]}-{digits[7..11]}",
             10 => $"({digits[0..2]}) {digits[2..6]}-{digits[6..10]}",
             _ => value
+        };
+    }
+
+    private static string FormatarCnpj(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return "";
+        var digits = new string(value.Where(char.IsDigit).ToArray());
+        if (digits.Length > 14) digits = digits[..14];
+
+        return digits.Length switch
+        {
+            <= 2 => digits,
+            <= 5 => $"{digits[0..2]}.{digits[2..]}",
+            <= 8 => $"{digits[0..2]}.{digits[2..5]}.{digits[5..]}",
+            <= 12 => $"{digits[0..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..]}",
+            _ => $"{digits[0..2]}.{digits[2..5]}.{digits[5..8]}/{digits[8..12]}-{digits[12..]}"
         };
     }
 }

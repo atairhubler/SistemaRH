@@ -45,7 +45,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="5,0,0,0">
                         <TextBlock Text="CNPJ *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
-                        <TextBox Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="40" Text="{Binding CNPJ, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="40" Text="{Binding CNPJ, UpdateSourceTrigger=PropertyChanged}" MaxLength="18"/>
                     </StackPanel>
                 </Grid>
 

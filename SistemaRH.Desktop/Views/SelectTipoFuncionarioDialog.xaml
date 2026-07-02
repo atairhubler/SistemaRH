@@ -1,7 +1,7 @@
 <Window x:Class="SistemaRH.Desktop.Views.SelectTipoFuncionarioDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Novo Funcionário" Height="480" Width="550" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False">
+        Title="Novo Funcionário" Height="480" Width="780" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False">
     <Grid Background="{DynamicResource SurfaceBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,13 +13,14 @@
         <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="20">
             <StackPanel>
                 <TextBlock Text="Selecione o Tipo de Funcionário" Foreground="{DynamicResource HeaderForeground}" FontSize="18" FontWeight="Bold"/>
-                <TextBlock Text="Escolha se deseja cadastrar um funcionário CLT ou PJ" Foreground="{DynamicResource HeaderSubForeground2}" FontSize="12" Margin="0,5,0,0"/>
+                <TextBlock Text="Escolha se deseja cadastrar um funcionário CLT, PJ ou Estagiário" Foreground="{DynamicResource HeaderSubForeground2}" FontSize="12" Margin="0,5,0,0"/>
             </StackPanel>
         </Border>
 
         <!-- Conteúdo -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -36,13 +37,24 @@
             </Border>
 
             <!-- PJ -->
-            <Border Grid.Column="1" Background="{DynamicResource AccentPinkBackground}" BorderBrush="{DynamicResource AccentPinkBorder}" BorderThickness="2" CornerRadius="8" Padding="20" Margin="10,0,0,0" Cursor="Hand">
+            <Border Grid.Column="1" Background="{DynamicResource AccentPinkBackground}" BorderBrush="{DynamicResource AccentPinkBorder}" BorderThickness="2" CornerRadius="8" Padding="20" Margin="10,0,10,0" Cursor="Hand">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="🏢" FontSize="48" HorizontalAlignment="Center"/>
                     <TextBlock Text="PJ" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource AccentPinkForeground}" Margin="0,10,0,5"/>
                     <TextBlock Text="Pessoa Jurídica" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,10" TextAlignment="Center" TextWrapping="Wrap"/>
                     <TextBlock Text="Contrato flexível, RPA/NF" FontSize="11" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}" TextAlignment="Center" TextWrapping="Wrap"/>
                     <Button Content="Selecionar PJ" Padding="10,8" Background="{DynamicResource AccentPinkBorder}" Foreground="{DynamicResource BtnForeground}" Margin="0,15,0,0" Tag="PJ" Click="TipoButton_Click"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Estagiário -->
+            <Border Grid.Column="2" Background="{DynamicResource AccentBlueBackground}" BorderBrush="{DynamicResource AccentBlueBorder}" BorderThickness="2" CornerRadius="8" Padding="20" Margin="10,0,0,0" Cursor="Hand">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="🎓" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Estagiário" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,10,0,5"/>
+                    <TextBlock Text="Contrato de estágio" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,10" TextAlignment="Center" TextWrapping="Wrap"/>
+                    <TextBlock Text="Bolsa auxílio, sem CTPS/PIS" FontSize="11" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}" TextAlignment="Center" TextWrapping="Wrap"/>
+                    <Button Content="Selecionar Estagiário" Padding="10,8" Background="{DynamicResource AccentBlueBorder}" Foreground="{DynamicResource BtnForeground}" Margin="0,15,0,0" Tag="Estagiario" Click="TipoButton_Click"/>
                 </StackPanel>
             </Border>
         </Grid>

@@ -49,6 +49,7 @@ public class ConfiguracoesViewModel : BaseViewModel
     public ICommand RestaurarBackupCommand { get; }
     public ICommand AbrirPastaBackupCommand { get; }
     public ICommand SelecionarCorCommand { get; }
+    public ICommand GerenciarUsuariosCommand { get; }
 
     public ConfiguracoesViewModel(
         IBackupService backupService,
@@ -66,6 +67,13 @@ public class ConfiguracoesViewModel : BaseViewModel
         RestaurarBackupCommand = new RelayCommand(_ => _ = RestaurarBackupAsync());
         AbrirPastaBackupCommand = new RelayCommand(_ => _ = AbrirPastaBackupAsync());
         SelecionarCorCommand = new RelayCommand(param => TemaCor = param?.ToString() ?? "Azul");
+        GerenciarUsuariosCommand = new RelayCommand(_ => AbrirUsuarios());
+    }
+
+    private void AbrirUsuarios()
+    {
+        var dialog = new Views.UsuariosView();
+        dialog.ShowDialog();
     }
 
     private void AplicarTemaAtual()

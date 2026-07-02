@@ -12,6 +12,7 @@ public class MappingProfile : Profile
         CreateMap<Funcionario, FuncionarioDto>().ReverseMap();
         CreateMap<FuncionarioCLT, FuncionarioCLTDto>().ReverseMap();
         CreateMap<FuncionarioPJ, FuncionarioPJDto>().ReverseMap();
+        CreateMap<FuncionarioEstagiario, FuncionarioEstagiarioDto>().ReverseMap();
 
         // Férias
         CreateMap<Ferias, FeriasDto>().ReverseMap();

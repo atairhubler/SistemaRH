@@ -1,4 +1,4 @@
-﻿namespace SistemaRH.Tests;
+namespace SistemaRH.Tests;
 
 public class Tests
 {

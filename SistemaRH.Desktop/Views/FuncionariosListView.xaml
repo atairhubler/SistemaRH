@@ -24,12 +24,22 @@
                         FontWeight="Bold" Cursor="Hand" Margin="0,0,10,0"/>
                 <Button Content="Exportar CSV" Command="{Binding ExportarCsvCommand}"
                         Background="{DynamicResource BtnExportBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
+                        Cursor="Hand" Margin="0,0,10,0"/>
+                <Button Content="Importar Planilha da Agil Telecom" Command="{Binding ImportarPlanilhaCommand}"
+                        Background="{DynamicResource BtnExportBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
                         Cursor="Hand" Margin="0,0,20,0"/>
                 <ComboBox Width="130" Padding="8,0" Height="34" SelectedIndex="0"
                           SelectionChanged="FiltroTipo_Changed">
                     <ComboBoxItem>Todos</ComboBoxItem>
                     <ComboBoxItem>CLT</ComboBoxItem>
                     <ComboBoxItem>PJ</ComboBoxItem>
+                    <ComboBoxItem>Estagiário</ComboBoxItem>
+                </ComboBox>
+                <ComboBox Width="110" Padding="8,0" Height="34" Margin="10,0,0,0" SelectedIndex="0"
+                          SelectionChanged="FiltroStatus_Changed">
+                    <ComboBoxItem>Ativos</ComboBoxItem>
+                    <ComboBoxItem>Inativos</ComboBoxItem>
+                    <ComboBoxItem>Todos</ComboBoxItem>
                 </ComboBox>
                 <TextBox Width="220" Height="34" Margin="10,0,0,0" Padding="10,0"
                          Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
@@ -76,7 +86,7 @@
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
                 <DataGridTextColumn Header="Telefone" Binding="{Binding Telefone}" Width="130"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90"/>
-                <DataGridTemplateColumn Header="Ações" Width="160">
+                <DataGridTemplateColumn Header="Ações" Width="190">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -85,10 +95,17 @@
                                         Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"
                                         Cursor="Hand"/>
-                                <Button Content="Excluir" Padding="8,4"
+                                <Button Content="Desativar" Padding="8,4"
                                         Background="{DynamicResource BtnDangerBackground}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
-                                        Command="{Binding DataContext.DeletarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        Command="{Binding DataContext.DesativarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                         CommandParameter="{Binding}"
+                                        Visibility="{Binding IsAtivo, Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Cursor="Hand"/>
+                                <Button Content="Ativar" Padding="8,4"
+                                        Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
+                                        Command="{Binding DataContext.AtivarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Visibility="{Binding IsAtivo, Converter={StaticResource InverseBoolToVisibilityConverter}}"
                                         Cursor="Hand"/>
                             </StackPanel>
                         </DataTemplate>
