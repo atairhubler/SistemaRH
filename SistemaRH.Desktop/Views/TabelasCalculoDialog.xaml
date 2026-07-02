@@ -4,7 +4,7 @@
         Title="Tabelas de Cálculo — INSS e IRRF"
         Width="940" Height="540"
         MinWidth="760" MinHeight="420"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
         Background="{DynamicResource SurfaceBackground}"
         ShowInTaskbar="False">
