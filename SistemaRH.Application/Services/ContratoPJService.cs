@@ -84,6 +84,7 @@ public class ContratoPJService : IContratoPJService
         contrato.Descricao = dto.Descricao;
         contrato.DataAtualizacao = DateTime.Now;
 
+        _context.ContratosPJ.Update(contrato);
         await _context.SaveChangesAsync();
 
         return _mapper.Map<ContratoPJDto>(contrato);

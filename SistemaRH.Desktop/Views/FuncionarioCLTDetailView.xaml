@@ -25,10 +25,10 @@
 
                 <StackPanel Margin="0,0,0,15">
                     <TextBlock Text="Empresa *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
-                    <ComboBox Height="30" Padding="10,0"
+                    <ComboBox Height="40" Padding="10,0"
                               ItemsSource="{Binding Empresas}"
                               SelectedItem="{Binding EmpresaSelecionada}"
-                              DisplayMemberPath="RazaoSocial" SelectionChanged="ComboBox_SelectionChanged"/>
+                              DisplayMemberPath="RazaoSocial"/>
                 </StackPanel>
 
                 <!-- Seção: Dados Básicos -->

@@ -73,9 +73,6 @@ namespace SistemaRH.Desktop
                 services.AddScoped<IRelatorioService, RelatorioService>();
                 services.AddScoped<IBackupService, BackupService>();
                 services.AddScoped<IGoogleDriveService, GoogleDriveService>();
-                services.AddScoped<IExcelImportService, ExcelImportService>();
-                services.AddScoped<IUsuarioService, UsuarioService>();
-                services.AddScoped<IAuditoriaService, AuditoriaService>();
 
                 // Desktop Services
                 services.AddScoped<IDialogService, DialogService>();
@@ -91,13 +88,8 @@ namespace SistemaRH.Desktop
                 services.AddScoped<ConfiguracoesViewModel>();
                 services.AddScoped<FuncionarioCLTDetailViewModel>();
                 services.AddScoped<FuncionarioPJDetailViewModel>();
-                services.AddScoped<FuncionarioEstagiarioDetailViewModel>();
                 services.AddScoped<FolhaPagamentoViewModel>();
                 services.AddTransient<TabelasCalculoViewModel>();
-                services.AddScoped<LoginViewModel>();
-                services.AddScoped<UsuariosViewModel>();
-                services.AddScoped<UsuarioDetailViewModel>();
-                services.AddScoped<AuditoriaViewModel>();
 
                 ServiceProvider = services.BuildServiceProvider();
 
@@ -105,11 +97,6 @@ namespace SistemaRH.Desktop
                 using var scope = ServiceProvider.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<RhDbContext>();
                 context.Database.Migrate();
-
-                // Seed do usuário administrador inicial (só se não houver nenhum usuário cadastrado)
-                var usuarioService = scope.ServiceProvider.GetRequiredService<IUsuarioService>();
-                if (!await usuarioService.ExisteAlgumUsuarioAsync())
-                    await usuarioService.AddAsync("admin", "admin123");
 
                 // Backup automático a cada 30 dias
                 var config = ServiceProvider.GetRequiredService<ConfiguracaoService>();
@@ -142,19 +129,6 @@ namespace SistemaRH.Desktop
                     };
                     dicts.Add(new ResourceDictionary { Source = new Uri($"pack://application:,,,/Themes/{arquivo}.xaml") });
                 }
-
-                // Login: só continua para a janela principal se autenticar com sucesso
-                var loginView = new Views.LoginView();
-                var loginOk = loginView.ShowDialog() == true;
-                if (!loginOk)
-                {
-                    Shutdown();
-                    return;
-                }
-
-                var mainWindow = new MainWindow();
-                mainWindow.Closed += (_, _) => Shutdown();
-                mainWindow.Show();
             }
             catch (Exception ex)
             {

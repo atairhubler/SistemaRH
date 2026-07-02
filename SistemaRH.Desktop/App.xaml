@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SistemaRH.Desktop"
              xmlns:conv="clr-namespace:SistemaRH.Desktop.Converters"
-             ShutdownMode="OnExplicitShutdown">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

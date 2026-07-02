@@ -38,7 +38,6 @@
                 <Button Content="💰 Folha CLT" Padding="10,5" Margin="5" Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding FolhaPagamentoCommand}"/>
                 <Button Content="📄 RPA/NF PJ" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding RpaNfCommand}"/>
                 <Button Content="📊 Relatórios" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding RelatoriosCommand}"/>
-                <Button Content="🕵️ Auditoria" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding AuditoriaCommand}"/>
                 <Separator Width="1" Margin="10,0"/>
                 <Button Content="⚙️ Configurações" Padding="10,5" Margin="5" Background="{DynamicResource BtnSettingsBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding ConfiguracoesCommand}"/>
             </StackPanel>

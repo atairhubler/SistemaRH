@@ -290,44 +290,6 @@ namespace SistemaRH.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("SistemaRH.Domain.Entities.LogAuditoria", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Acao")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DataHora")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Entidade")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Usuario")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ValoresAntes")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ValoresDepois")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DataHora");
-
-                    b.ToTable("LogsAuditoria");
-                });
-
             modelBuilder.Entity("SistemaRH.Domain.Entities.PeriodoFerias", b =>
                 {
                     b.Property<int>("Id")
@@ -489,77 +451,34 @@ namespace SistemaRH.Data.Migrations
                     b.ToTable("SalarioHistorico");
                 });
 
-            modelBuilder.Entity("SistemaRH.Domain.Entities.Usuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("DataAtualizacao")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("DataCriacao")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NomeUsuario")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SenhaHash")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NomeUsuario")
-                        .IsUnique();
-
-                    b.ToTable("Usuarios");
-                });
-
             modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioCLT", b =>
                 {
                     b.HasBaseType("SistemaRH.Domain.Entities.Funcionario");
 
                     b.Property<string>("Cargo")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Cargo");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cpf")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Cpf");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Ctps")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataAdmissao")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataAdmissao");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DataDemissao")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataDemissao");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DataNascimento")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataNascimento");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Departamento")
                         .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Departamento");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PisPassep")
                         .IsRequired()
@@ -569,53 +488,6 @@ namespace SistemaRH.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue(1);
-                });
-
-            modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioEstagiario", b =>
-                {
-                    b.HasBaseType("SistemaRH.Domain.Entities.Funcionario");
-
-                    b.Property<decimal>("Bolsa")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Cargo")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Cargo");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Cpf");
-
-                    b.Property<DateTime>("DataAdmissao")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataAdmissao");
-
-                    b.Property<DateTime?>("DataDemissao")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataDemissao");
-
-                    b.Property<DateTime>("DataNascimento")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("DataNascimento");
-
-                    b.Property<string>("Departamento")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("Departamento");
-
-                    b.Property<string>("Rg")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasDiscriminator().HasValue(3);
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.FuncionarioPJ", b =>

@@ -36,7 +36,7 @@
                     <StackPanel Grid.Column="0" Margin="0,0,6,0">
                         <TextBlock Text="CNPJ *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
                         <TextBox Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="38"
-                                 Text="{Binding Cnpj, UpdateSourceTrigger=PropertyChanged}" MaxLength="18"/>
+                                 Text="{Binding Cnpj, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="6,0,0,0">
                         <TextBlock Text="Inscrição Estadual" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>

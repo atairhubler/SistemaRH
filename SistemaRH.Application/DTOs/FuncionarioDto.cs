@@ -17,6 +17,4 @@ public abstract class FuncionarioDto
     public StatusFuncionario Status { get; set; }
     public DateTime DataCriacao { get; set; }
     public DateTime? DataAtualizacao { get; set; }
-
-    public bool IsAtivo => Status == StatusFuncionario.Ativo;
 }

@@ -100,6 +100,7 @@ public class RpaNfService : IRpaNfService
         if (novoStatus == 2) // Pago
             rpaNf.DataPagamento = DateTime.Now;
 
+        _context.RpasNfsPJ.Update(rpaNf);
         await _context.SaveChangesAsync();
 
         return true;

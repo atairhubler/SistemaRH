@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Windows.Input;
 using SistemaRH.Application.DTOs;
 using SistemaRH.Application.Interfaces;
@@ -13,7 +12,6 @@ public class TabelasCalculoViewModel : BaseViewModel
 {
     private readonly TabelasFolhaService _tabelasService;
     private readonly IDialogService _dialogService;
-    private readonly IAuditoriaService _auditoriaService;
 
     private decimal _deducaoPorDependenteConfig;
 
@@ -31,11 +29,10 @@ public class TabelasCalculoViewModel : BaseViewModel
     public ICommand SalvarTabelasCommand { get; }
     public ICommand RestaurarPadraoCommand { get; }
 
-    public TabelasCalculoViewModel(TabelasFolhaService tabelasService, IDialogService dialogService, IAuditoriaService auditoriaService)
+    public TabelasCalculoViewModel(TabelasFolhaService tabelasService, IDialogService dialogService)
     {
         _tabelasService = tabelasService;
         _dialogService = dialogService;
-        _auditoriaService = auditoriaService;
 
         SalvarTabelasCommand = new RelayCommand(_ => _ = SalvarTabelasAsync());
         RestaurarPadraoCommand = new RelayCommand(_ => RestaurarPadrao());
@@ -80,13 +77,7 @@ public class TabelasCalculoViewModel : BaseViewModel
     {
         try
         {
-            var antes = JsonSerializer.Serialize(_tabelasService.GetTabelas());
-            var novaConfig = ObterTabelasDaUI();
-            var depois = JsonSerializer.Serialize(novaConfig);
-
-            _tabelasService.Salvar(novaConfig);
-            await _auditoriaService.RegistrarAsync("Edição", "Tabelas de Cálculo (INSS/IRRF)", "Tabelas de cálculo de INSS/IRRF atualizadas", antes, depois);
-
+            _tabelasService.Salvar(ObterTabelasDaUI());
             StatusMessage = "Tabelas salvas com sucesso!";
             await _dialogService.ShowInfoAsync("Tabelas Salvas",
                 "As tabelas de cálculo foram salvas com sucesso!\n\nO próximo cálculo já usará os novos valores.");

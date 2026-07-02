@@ -30,7 +30,6 @@ public class FuncionarioService : IFuncionarioService
             {
                 FuncionarioCLT clt => _mapper.Map<FuncionarioCLTDto>(clt),
                 FuncionarioPJ pj => _mapper.Map<FuncionarioPJDto>(pj),
-                FuncionarioEstagiario est => _mapper.Map<FuncionarioEstagiarioDto>(est),
                 _ => throw new InvalidOperationException("Tipo desconhecido")
             });
         }
@@ -50,12 +49,6 @@ public class FuncionarioService : IFuncionarioService
         return _mapper.Map<List<FuncionarioPJDto>>(pjs);
     }
 
-    public async Task<IEnumerable<FuncionarioEstagiarioDto>> GetAllEstagiarioAsync()
-    {
-        var estagiarios = await _context.FuncionariosEstagiario.ToListAsync();
-        return _mapper.Map<List<FuncionarioEstagiarioDto>>(estagiarios);
-    }
-
     public async Task<FuncionarioDto> GetByIdAsync(int id)
     {
         var funcionario = await _context.Funcionarios.FindAsync(id);
@@ -65,7 +58,6 @@ public class FuncionarioService : IFuncionarioService
             null => throw new KeyNotFoundException($"Funcionário com ID {id} não encontrado"),
             FuncionarioCLT clt => _mapper.Map<FuncionarioCLTDto>(clt),
             FuncionarioPJ pj => _mapper.Map<FuncionarioPJDto>(pj),
-            FuncionarioEstagiario est => _mapper.Map<FuncionarioEstagiarioDto>(est),
             _ => throw new InvalidOperationException("Tipo desconhecido")
         };
     }
@@ -182,47 +174,6 @@ public class FuncionarioService : IFuncionarioService
         return _mapper.Map<FuncionarioPJDto>(pj);
     }
 
-    public async Task<FuncionarioEstagiarioDto> AddEstagiarioAsync(FuncionarioEstagiarioDto dto)
-    {
-        var empresaId = await ObterOuCriarEmpresaPadraoAsync(dto.EmpresaId);
-
-        var estagiario = new FuncionarioEstagiario
-        {
-            Nome = dto.Nome,
-            Cpf = dto.Cpf ?? "",
-            Rg = dto.Rg ?? "",
-            Email = dto.Email ?? "",
-            Telefone = dto.Telefone ?? "",
-            Endereco = dto.Endereco ?? "",
-            Cidade = dto.Cidade ?? "",
-            Estado = dto.Estado ?? "",
-            Cep = dto.Cep ?? "",
-            Cargo = dto.Cargo ?? "",
-            Departamento = dto.Departamento ?? "",
-            DataAdmissao = dto.DataAdmissao,
-            DataNascimento = dto.DataNascimento,
-            Bolsa = dto.Bolsa,
-            EmpresaId = empresaId,
-            Status = StatusFuncionario.Ativo,
-            Tipo = TipoFuncionario.Estagiario,
-            DataCriacao = DateTime.Now
-        };
-
-        _context.FuncionariosEstagiario.Add(estagiario);
-
-        var ferias = new Ferias
-        {
-            Funcionario = estagiario,
-            DataAdmissao = estagiario.DataAdmissao,
-            DiasDisponiveis = 30,
-            DataCriacao = DateTime.Now
-        };
-        _context.Ferias.Add(ferias);
-
-        await _context.SaveChangesAsync();
-        return _mapper.Map<FuncionarioEstagiarioDto>(estagiario);
-    }
-
     public async Task<FuncionarioCLTDto> UpdateCltAsync(int id, FuncionarioCLTDto dto)
     {
         var clt = await _context.FuncionariosCLT.FindAsync(id)
@@ -241,6 +192,7 @@ public class FuncionarioService : IFuncionarioService
         clt.EmpresaId = dto.EmpresaId;
         clt.DataAtualizacao = DateTime.Now;
 
+        _context.FuncionariosCLT.Update(clt);
         await _context.SaveChangesAsync();
 
         return _mapper.Map<FuncionarioCLTDto>(clt);
@@ -261,53 +213,19 @@ public class FuncionarioService : IFuncionarioService
         pj.EmpresaId = dto.EmpresaId;
         pj.DataAtualizacao = DateTime.Now;
 
+        _context.FuncionariosPJ.Update(pj);
         await _context.SaveChangesAsync();
 
         return _mapper.Map<FuncionarioPJDto>(pj);
     }
 
-    public async Task<FuncionarioEstagiarioDto> UpdateEstagiarioAsync(int id, FuncionarioEstagiarioDto dto)
-    {
-        var estagiario = await _context.FuncionariosEstagiario.FindAsync(id)
-            ?? throw new KeyNotFoundException($"Estagiário com ID {id} não encontrado");
-
-        estagiario.Nome = dto.Nome;
-        estagiario.Cpf = dto.Cpf ?? "";
-        estagiario.Rg = dto.Rg ?? "";
-        estagiario.Email = dto.Email ?? "";
-        estagiario.Telefone = dto.Telefone ?? "";
-        estagiario.Cargo = dto.Cargo ?? "";
-        estagiario.Departamento = dto.Departamento ?? "";
-        estagiario.Bolsa = dto.Bolsa;
-        estagiario.DataAdmissao = dto.DataAdmissao;
-        estagiario.EmpresaId = dto.EmpresaId;
-        estagiario.DataAtualizacao = DateTime.Now;
-
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<FuncionarioEstagiarioDto>(estagiario);
-    }
-
-    public async Task<bool> AtivarAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var funcionario = await _context.Funcionarios.FindAsync(id);
-        if (funcionario == null) return false;
+        if (funcionario == null)
+            return false;
 
-        funcionario.Status = StatusFuncionario.Ativo;
-        funcionario.DataAtualizacao = DateTime.Now;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> DesativarAsync(int id)
-    {
-        var funcionario = await _context.Funcionarios.FindAsync(id);
-        if (funcionario == null) return false;
-
-        funcionario.Status = funcionario is FuncionarioPJ
-            ? StatusFuncionario.ContratoEncerrado
-            : StatusFuncionario.Demitido;
-        funcionario.DataAtualizacao = DateTime.Now;
+        _context.Funcionarios.Remove(funcionario);
         await _context.SaveChangesAsync();
         return true;
     }
@@ -326,7 +244,6 @@ public class FuncionarioService : IFuncionarioService
             {
                 FuncionarioCLT clt => _mapper.Map<FuncionarioCLTDto>(clt),
                 FuncionarioPJ pj => _mapper.Map<FuncionarioPJDto>(pj),
-                FuncionarioEstagiario est => _mapper.Map<FuncionarioEstagiarioDto>(est),
                 _ => throw new InvalidOperationException("Tipo desconhecido")
             });
         }

@@ -205,16 +205,6 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Usuários Section -->
-                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="20" Margin="0,0,0,20">
-                    <StackPanel>
-                        <TextBlock Text="👤 Usuários" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" Margin="0,0,0,8"/>
-                        <TextBlock Text="Gerencie quem pode acessar o sistema." FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,15"/>
-                        <Button Content="Gerenciar Usuários" Padding="15,10" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"
-                                HorizontalAlignment="Left" Command="{Binding GerenciarUsuariosCommand}"/>
-                    </StackPanel>
-                </Border>
-
                 <!-- Backup Section -->
                 <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="20" Margin="0,0,0,20">
                     <StackPanel>

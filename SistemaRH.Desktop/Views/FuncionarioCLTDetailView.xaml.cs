@@ -93,9 +93,4 @@ public partial class FuncionarioCLTDetailView : Window
         if (decimal.TryParse(limpo, NumberStyles.Number, CultureInfo.InvariantCulture, out var valor))
             vm.SalarioBruto = valor;
     }
-
-    private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-
-    }
 }

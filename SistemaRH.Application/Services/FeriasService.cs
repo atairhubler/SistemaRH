@@ -36,6 +36,7 @@ public class FeriasService : IFeriasService
         };
 
         ferias.DiasDisponiveis = diasDisponiveis;
+        _context.Ferias.Update(ferias);
         await _context.SaveChangesAsync();
 
         return _mapper.Map<FeriasDto>(ferias);
@@ -72,6 +73,7 @@ public class FeriasService : IFeriasService
         else
             ferias.DiasNaoRemunerados += dias;
 
+        _context.Ferias.Update(ferias);
         await _context.SaveChangesAsync();
 
         return true;
@@ -117,6 +119,8 @@ public class FeriasService : IFeriasService
                 ferias.DiasRemunerados -= periodo.Dias;
             else
                 ferias.DiasNaoRemunerados -= periodo.Dias;
+
+            _context.Ferias.Update(ferias);
         }
 
         _context.PeriodosFerias.Remove(periodo);
