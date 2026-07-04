@@ -121,7 +121,7 @@
             <Grid>
                 <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"
                            Foreground="{DynamicResource TextMuted}" FontSize="12" HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="↺ Restaurar Padrão 2024" Command="{Binding RestaurarPadraoCommand}"
                             Background="{DynamicResource BtnCancelBackground}" Foreground="{DynamicResource BtnForeground}"
                             Padding="15,0" Height="34" Margin="0,0,10,0" Cursor="Hand"
@@ -129,7 +129,7 @@
                     <Button Content="💾 Salvar Tabelas" Command="{Binding SalvarTabelasCommand}"
                             Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}"
                             Padding="20,0" Height="34" FontWeight="Bold" Cursor="Hand"/>
-                </StackPanel>
+                </WrapPanel>
             </Grid>
         </Border>
     </Grid>

@@ -10,13 +10,18 @@ namespace SistemaRH.Desktop.ViewModels;
 
 public class FuncionariosViewModel : BaseViewModel
 {
+    private static readonly EmpresaDto TodasAsEmpresas = new() { Id = 0, RazaoSocial = "Todas as Empresas" };
+
     private readonly IFuncionarioService _funcionarioService;
     private readonly IExcelImportService _excelImportService;
+    private readonly IEmpresaService _empresaService;
     private readonly IDialogService _dialogService;
 
     private List<FuncionarioDto> _todosFuncionarios = new();
     private ObservableCollection<FuncionarioDto> _funcionarios;
     private FuncionarioDto _selectedFuncionario;
+    private ObservableCollection<EmpresaDto> _empresas = new();
+    private EmpresaDto? _empresaSelecionada;
     private string _filtroTipo = "Todos";
     private string _filtroStatus = "Ativos";
     private string _filtroNome = "";
@@ -31,6 +36,22 @@ public class FuncionariosViewModel : BaseViewModel
     {
         get => _selectedFuncionario;
         set => SetProperty(ref _selectedFuncionario, value);
+    }
+
+    public ObservableCollection<EmpresaDto> Empresas
+    {
+        get => _empresas;
+        set => SetProperty(ref _empresas, value);
+    }
+
+    public EmpresaDto? EmpresaSelecionada
+    {
+        get => _empresaSelecionada;
+        set
+        {
+            if (SetProperty(ref _empresaSelecionada, value))
+                AplicarFiltro();
+        }
     }
 
     public string FiltroTipo
@@ -72,10 +93,12 @@ public class FuncionariosViewModel : BaseViewModel
     public FuncionariosViewModel(
         IFuncionarioService funcionarioService,
         IExcelImportService excelImportService,
+        IEmpresaService empresaService,
         IDialogService dialogService)
     {
         _funcionarioService = funcionarioService;
         _excelImportService = excelImportService;
+        _empresaService = empresaService;
         _dialogService = dialogService;
 
         Funcionarios = new ObservableCollection<FuncionarioDto>();
@@ -93,12 +116,29 @@ public class FuncionariosViewModel : BaseViewModel
         _ = CarregarAsync();
     }
 
+    private async Task CarregarEmpresasAsync()
+    {
+        try
+        {
+            var idAtual = _empresaSelecionada?.Id ?? 0;
+            var lista = await _empresaService.GetAllAsync();
+            var combinado = new ObservableCollection<EmpresaDto> { TodasAsEmpresas };
+            foreach (var empresa in lista) combinado.Add(empresa);
+            Empresas = combinado;
+            _empresaSelecionada = combinado.FirstOrDefault(e => e.Id == idAtual) ?? TodasAsEmpresas;
+            OnPropertyChanged(nameof(EmpresaSelecionada));
+        }
+        catch { }
+    }
+
     public async Task CarregarAsync()
     {
         try
         {
             IsLoading = true;
             StatusMessage = "Carregando funcionários...";
+
+            await CarregarEmpresasAsync();
 
             IEnumerable<FuncionarioDto> dados = FiltroTipo switch
             {
@@ -125,6 +165,9 @@ public class FuncionariosViewModel : BaseViewModel
     private void AplicarFiltro()
     {
         IEnumerable<FuncionarioDto> filtrados = _todosFuncionarios;
+
+        if (_empresaSelecionada != null && _empresaSelecionada.Id > 0)
+            filtrados = filtrados.Where(f => f.EmpresaId == _empresaSelecionada.Id);
 
         filtrados = _filtroStatus switch
         {

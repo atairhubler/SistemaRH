@@ -18,11 +18,11 @@
 
         <!-- Barra de ações -->
         <Border Grid.Row="1" Background="{DynamicResource ActionBarBackground}" Padding="20,10" BorderBrush="{DynamicResource BorderActionBar}" BorderThickness="0,0,0,1">
-            <StackPanel Orientation="Horizontal">
+            <WrapPanel Orientation="Horizontal">
                 <Button Content="+ Nova Empresa" Command="{Binding NovaEmpresaCommand}"
                         Background="{DynamicResource BtnPrimaryBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
                         FontWeight="Bold" Cursor="Hand"/>
-            </StackPanel>
+            </WrapPanel>
         </Border>
 
         <!-- Lista -->

@@ -17,8 +17,8 @@
         <TextBlock Grid.Row="0" Text="Relatório Comparativo: CLT vs PJ" FontSize="24" FontWeight="Bold" Margin="20,20,20,15" Foreground="{DynamicResource AccentBlueForeground}"/>
 
         <!-- Filtros -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,20,15">
-            <StackPanel Width="100" Margin="0,0,10,0">
+        <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="20,0,20,15">
+            <StackPanel Width="100" Margin="0,0,10,5">
                 <TextBlock Text="Mês:" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
                 <ComboBox SelectedItem="{Binding MesSelecionado}" Padding="8" Height="40">
                     <ComboBoxItem>1</ComboBoxItem>
@@ -36,18 +36,18 @@
                 </ComboBox>
             </StackPanel>
 
-            <StackPanel Width="100" Margin="0,0,10,0">
+            <StackPanel Width="100" Margin="0,0,10,5">
                 <TextBlock Text="Ano:" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
                 <TextBox Text="{Binding AnoSelecionado}" Padding="8" Height="40"/>
             </StackPanel>
 
-            <Button Content="📊 Gerar Relatório" Padding="10,5" Margin="0,25,10,0"
+            <Button Content="📊 Gerar Relatório" Padding="10,5" Margin="0,25,10,5"
                     Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"
                     Command="{Binding GerarRelatorioCommand}"/>
-            <Button Content="📥 Exportar Excel" Padding="10,5" Margin="0,25,0,0"
+            <Button Content="📥 Exportar Excel" Padding="10,5" Margin="0,25,0,5"
                     Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}"
                     Command="{Binding ExportarExcelCommand}"/>
-        </StackPanel>
+        </WrapPanel>
 
         <!-- Cards Resumo -->
         <Grid Grid.Row="2" Margin="20,0,20,20">

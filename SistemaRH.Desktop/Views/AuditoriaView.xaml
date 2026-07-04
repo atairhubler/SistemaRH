@@ -18,21 +18,21 @@
 
         <!-- Barra de filtros -->
         <Border Grid.Row="1" Background="{DynamicResource ActionBarBackground}" Padding="20,10" BorderBrush="{DynamicResource BorderActionBar}" BorderThickness="0,0,0,1">
-            <StackPanel Orientation="Horizontal">
-                <TextBox Width="200" Height="34" Padding="10,0"
+            <WrapPanel Orientation="Horizontal">
+                <TextBox Width="200" Height="34" Padding="10,0" Margin="0,0,0,5"
                          Text="{Binding FiltroUsuario, UpdateSourceTrigger=PropertyChanged}"
                          VerticalContentAlignment="Center"
                          Background="{DynamicResource InputBackground}"
                          Foreground="{DynamicResource TextPrimary}"
                          BorderBrush="{DynamicResource BorderDefault}"
                          Tag="🔍 Filtrar por usuário..."/>
-                <TextBlock Text="De:" VerticalAlignment="Center" Margin="15,0,5,0" Foreground="{DynamicResource TextLabel}"/>
-                <DatePicker Width="160" Height="34" SelectedDate="{Binding DataInicio}"/>
-                <TextBlock Text="Até:" VerticalAlignment="Center" Margin="15,0,5,0" Foreground="{DynamicResource TextLabel}"/>
-                <DatePicker Width="160" Height="34" SelectedDate="{Binding DataFim}"/>
-                <Button Content="Atualizar" Command="{Binding RefreshCommand}" Margin="15,0,0,0"
+                <TextBlock Text="De:" VerticalAlignment="Center" Margin="15,0,5,5" Foreground="{DynamicResource TextLabel}"/>
+                <DatePicker Width="160" Height="34" Margin="0,0,0,5" SelectedDate="{Binding DataInicio}"/>
+                <TextBlock Text="Até:" VerticalAlignment="Center" Margin="15,0,5,5" Foreground="{DynamicResource TextLabel}"/>
+                <DatePicker Width="160" Height="34" Margin="0,0,0,5" SelectedDate="{Binding DataFim}"/>
+                <Button Content="Atualizar" Command="{Binding RefreshCommand}" Margin="15,0,0,5"
                         Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8" Cursor="Hand"/>
-            </StackPanel>
+            </WrapPanel>
         </Border>
 
         <!-- Lista + detalhes -->

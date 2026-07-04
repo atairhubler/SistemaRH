@@ -18,55 +18,68 @@
 
         <!-- Barra de ações -->
         <Border Grid.Row="1" Background="{DynamicResource ActionBarBackground}" Padding="20,10" BorderBrush="{DynamicResource BorderActionBar}" BorderThickness="0,0,0,1">
-            <StackPanel Orientation="Horizontal">
+            <WrapPanel Orientation="Horizontal">
                 <Button Content="+ Novo Funcionário" Command="{Binding NovoCommand}"
                         Background="{DynamicResource BtnPrimaryBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
-                        FontWeight="Bold" Cursor="Hand" Margin="0,0,10,0"/>
+                        FontWeight="Bold" Cursor="Hand" Margin="0,0,10,5"/>
                 <Button Content="Exportar CSV" Command="{Binding ExportarCsvCommand}"
                         Background="{DynamicResource BtnExportBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
-                        Cursor="Hand" Margin="0,0,10,0"/>
-                <Button Content="Importar Planilha da Agil Telecom" Command="{Binding ImportarPlanilhaCommand}"
+                        Cursor="Hand" Margin="0,0,10,5"/>
+                <Button Content="Importar Planilha" Command="{Binding ImportarPlanilhaCommand}"
                         Background="{DynamicResource BtnExportBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
-                        Cursor="Hand" Margin="0,0,20,0"/>
-                <ComboBox Width="130" Padding="8,0" Height="34" SelectedIndex="0"
+                        Cursor="Hand" Margin="0,0,20,5"/>
+                <ComboBox Width="180" Padding="8,0" Height="34" Margin="0,0,10,5"
+                          ItemsSource="{Binding Empresas}"
+                          SelectedItem="{Binding EmpresaSelecionada}"
+                          DisplayMemberPath="RazaoSocial"/>
+                <ComboBox Width="130" Padding="8,0" Height="34" Margin="0,0,10,5" SelectedIndex="0"
                           SelectionChanged="FiltroTipo_Changed">
                     <ComboBoxItem>Todos</ComboBoxItem>
                     <ComboBoxItem>CLT</ComboBoxItem>
                     <ComboBoxItem>PJ</ComboBoxItem>
                     <ComboBoxItem>Estagiário</ComboBoxItem>
                 </ComboBox>
-                <ComboBox Width="110" Padding="8,0" Height="34" Margin="10,0,0,0" SelectedIndex="0"
+                <ComboBox Width="110" Padding="8,0" Height="34" Margin="0,0,10,5" SelectedIndex="0"
                           SelectionChanged="FiltroStatus_Changed">
                     <ComboBoxItem>Ativos</ComboBoxItem>
                     <ComboBoxItem>Inativos</ComboBoxItem>
                     <ComboBoxItem>Todos</ComboBoxItem>
                 </ComboBox>
-                <TextBox Width="220" Height="34" Margin="10,0,0,0" Padding="10,0"
-                         Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
-                         VerticalContentAlignment="Center"
-                         Background="{DynamicResource InputBackground}"
-                         Foreground="{DynamicResource TextPrimary}"
-                         BorderBrush="{DynamicResource BorderDefault}"
-                         Tag="🔍 Buscar por nome...">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Resources>
-                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                    <VisualBrush.Visual>
-                                        <Label Content="{Binding Tag, RelativeSource={RelativeSource AncestorType=TextBox}}"
-                                               Foreground="{DynamicResource TextFaint}" Padding="2,0"/>
-                                    </VisualBrush.Visual>
-                                </VisualBrush>
-                            </Style.Resources>
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-            </StackPanel>
+                <Border Width="240" Height="34" Margin="0,0,0,5" CornerRadius="4"
+                        Background="{DynamicResource InputBackground}" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Text="🔍" FontSize="13" VerticalAlignment="Center" Margin="4,0,10,0" Foreground="{DynamicResource TextFaint}"/>
+                        <TextBox Grid.Column="0" Padding="10,0,0,0" BorderThickness="0"
+                                 VerticalContentAlignment="Center"
+                                 Text="{Binding FiltroNome, UpdateSourceTrigger=PropertyChanged}"
+                                 Foreground="{DynamicResource TextPrimary}"
+                                 Tag="Nome">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Style.Resources>
+                                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                            <VisualBrush.Visual>
+                                                <Label Content="{Binding Tag, RelativeSource={RelativeSource AncestorType=TextBox}}"
+                                                       Foreground="{DynamicResource TextFaint}" Padding="2,0"/>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </Style.Resources>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="Text" Value="">
+                                            <Setter Property="Background" Value="{StaticResource CueBannerBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
+                </Border>
+            </WrapPanel>
         </Border>
 
         <!-- Lista -->
