@@ -81,15 +81,35 @@
                   BorderThickness="0" Margin="20,10">
 
             <DataGrid.Columns>
+                <DataGridTemplateColumn Header="" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid Width="32" Height="32">
+                                <Ellipse Fill="{DynamicResource CardBackground}" Stroke="{DynamicResource BorderCard}" StrokeThickness="1"/>
+                                <TextBlock Text="👤" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextFaint}"/>
+                                <Ellipse>
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Foto, Converter={StaticResource ByteArrayToImageSourceConverter}}" Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="*" MinWidth="180"/>
                 <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="70"/>
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
                 <DataGridTextColumn Header="Telefone" Binding="{Binding Telefone}" Width="130"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="90"/>
-                <DataGridTemplateColumn Header="Ações" Width="190">
+                <DataGridTemplateColumn Header="Ações" Width="260">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Content="Perfil" Padding="8,4" Margin="0,0,5,0"
+                                        Background="{DynamicResource AccentBlueBorder}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
+                                        Command="{Binding DataContext.PerfilCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Cursor="Hand"/>
                                 <Button Content="Editar" Padding="8,4" Margin="0,0,5,0"
                                         Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
                                         Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"

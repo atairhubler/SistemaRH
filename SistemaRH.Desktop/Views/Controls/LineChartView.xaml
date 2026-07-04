@@ -1,0 +1,12 @@
+<UserControl x:Class="SistemaRH.Desktop.Views.Controls.LineChartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Canvas x:Name="ChartCanvas" Grid.Row="0" ClipToBounds="True"/>
+        <StackPanel x:Name="LegendaPanel" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+    </Grid>
+</UserControl>

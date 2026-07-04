@@ -20,6 +20,9 @@ public class MappingProfile : Profile
         // RPA/NF PJ
         CreateMap<RpaNfPJ, RpaNfDto>().ReverseMap();
 
+        // Atestado
+        CreateMap<Atestado, AtestadoDto>().ReverseMap();
+
         // Relatório
         CreateMap<RelatorioComparativoDto, RelatorioComparativoDto>().ReverseMap();
     }

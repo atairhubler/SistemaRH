@@ -28,6 +28,7 @@ public abstract class Funcionario
     public string Observacoes { get; set; }
     public decimal AjudaDeCusto { get; set; }
     public string CamposPersonalizadosJson { get; set; } = "{}";
+    public byte[]? Foto { get; set; }
 
     // Navegação
     public Empresa Empresa { get; set; }

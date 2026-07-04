@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Windows.Input;
 using SistemaRH.Application.DTOs;
 using SistemaRH.Application.Interfaces;
+using SistemaRH.Desktop.Helpers;
 using SistemaRH.Desktop.Services;
 using SistemaRH.Domain.Enums;
 
@@ -49,6 +50,7 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
     private decimal _ajudaDeCusto;
     private decimal _complementoSalarial;
     private decimal _auxilioEducacao;
+    private byte[]? _foto;
     private ObservableCollection<CampoPersonalizadoValorViewModel> _camposPersonalizados = new();
 
     public string Titulo => _isEdit ? "Editar Funcionário CLT" : "Novo Funcionário CLT";
@@ -113,6 +115,8 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
     }
     public decimal TotalAtual => SalarioBruto + ComplementoSalarial + AjudaDeCusto + AuxilioEducacao;
 
+    public byte[]? Foto { get => _foto; set => SetProperty(ref _foto, value); }
+
     public ObservableCollection<CampoPersonalizadoValorViewModel> CamposPersonalizados
     {
         get => _camposPersonalizados;
@@ -128,6 +132,8 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
     public ICommand SalvarCommand { get; }
     public ICommand CancelarCommand { get; }
     public ICommand AbrirHistoricoCommand { get; }
+    public ICommand AbrirAtestadosCommand { get; }
+    public ICommand SelecionarFotoCommand { get; }
 
     public FuncionarioCLTDetailViewModel(
         IFuncionarioService funcionarioService,
@@ -143,6 +149,8 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
         SalvarCommand = new RelayCommand(_ => _ = SalvarAsync());
         CancelarCommand = new RelayCommand(_ => Cancelar());
         AbrirHistoricoCommand = new RelayCommand(_ => AbrirHistorico());
+        AbrirAtestadosCommand = new RelayCommand(_ => AbrirAtestados());
+        SelecionarFotoCommand = new RelayCommand(_ => _ = SelecionarFotoAsync());
     }
 
     public void PrepararNovo()
@@ -159,6 +167,7 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
         DataNascimento = null;
         DataDemissao = null;
         EmpresaSelecionada = null;
+        Foto = null;
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync();
@@ -198,6 +207,7 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
         DataAdmissao = dto.DataAdmissao;
         DataNascimento = dto.DataNascimento;
         DataDemissao = dto.DataDemissao;
+        Foto = dto.Foto;
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync(dto.EmpresaId);
@@ -297,6 +307,7 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
                 ComplementoSalarial = ComplementoSalarial,
                 AuxilioEducacao = AuxilioEducacao,
                 CamposPersonalizadosJson = SerializarCamposPersonalizados(),
+                Foto = Foto,
                 EmpresaId = EmpresaSelecionada!.Id
             };
 
@@ -329,6 +340,30 @@ public class FuncionarioCLTDetailViewModel : BaseViewModel
         var dialog = new Views.HistoricoSalarialView();
         dialog.ShowDialog();
         if (vm != null) SalarioBruto = vm.ValorAtual;
+    }
+
+    private void AbrirAtestados()
+    {
+        if (!_isEdit || _id == 0) return;
+        var vm = App.ServiceProvider.GetService(typeof(AtestadosViewModel)) as AtestadosViewModel;
+        vm?.Preparar(_id);
+        var dialog = new Views.AtestadosView();
+        dialog.ShowDialog();
+    }
+
+    private async Task SelecionarFotoAsync()
+    {
+        var caminho = await _dialogService.AbrirArquivoAsync("Imagens|*.jpg;*.jpeg;*.png;*.bmp");
+        if (string.IsNullOrEmpty(caminho)) return;
+
+        try
+        {
+            Foto = ImagemHelper.RedimensionarParaJpeg(caminho);
+        }
+        catch (Exception ex)
+        {
+            await _dialogService.ShowErrorAsync("Erro", $"Não foi possível carregar a imagem: {ex.Message}");
+        }
     }
 
     private void Cancelar() => FecharJanela?.Invoke();

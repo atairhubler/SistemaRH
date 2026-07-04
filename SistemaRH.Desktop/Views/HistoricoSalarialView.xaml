@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:beh="clr-namespace:SistemaRH.Desktop.Behaviors"
         mc:Ignorable="d"
         Title="{Binding Titulo}" Height="560" Width="620" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid Background="{DynamicResource SurfaceBackground}">
@@ -32,14 +33,25 @@
                         <DatePicker SelectedDate="{Binding NovaData}" Padding="8" Height="36"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Margin="5,0,5,0">
-                        <TextBlock Text="Motivo" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <TextBlock Text="Motivo *" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
                         <TextBox Text="{Binding NovoMotivo, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
                                  BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Margin="5,0,0,0">
-                        <TextBlock Text="{Binding RotuloValor, StringFormat='Novo {0}'}" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding NovoValor, UpdateSourceTrigger=PropertyChanged}" Padding="8" Height="36"
-                                 BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"/>
+                        <TextBlock Text="{Binding RotuloValor, StringFormat='Novo {0} *'}" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,5"/>
+                        <Grid Height="36">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Background="{DynamicResource SalaryPrefixBackground}" BorderBrush="{DynamicResource BorderDefault}"
+                                    BorderThickness="1,1,0,1" Padding="8,0">
+                                <TextBlock Text="R$" VerticalAlignment="Center" Foreground="{DynamicResource TextMuted}" FontWeight="SemiBold"/>
+                            </Border>
+                            <TextBox Grid.Column="1" Padding="8"
+                                     BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"
+                                     beh:MoedaMask.Valor="{Binding NovoValor, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
                     </StackPanel>
                 </Grid>
                 <TextBlock Text="Observações" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,10,0,5"/>

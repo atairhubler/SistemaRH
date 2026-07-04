@@ -17,6 +17,7 @@ public class MainWindowViewModel : BaseViewModel
     private readonly FeriasViewModel _feriasViewModel;
     private readonly RpaNfViewModel _rpaNfViewModel;
     private readonly RelatorioComparativoViewModel _relatorioViewModel;
+    private readonly GraficosViewModel _graficosViewModel;
     private readonly ConfiguracoesViewModel _configuracoesViewModel;
     private readonly FolhaPagamentoViewModel _folhaPagamentoViewModel;
     private readonly AuditoriaViewModel _auditoriaViewModel;
@@ -70,6 +71,7 @@ public class MainWindowViewModel : BaseViewModel
         FeriasViewModel feriasViewModel,
         RpaNfViewModel rpaNfViewModel,
         RelatorioComparativoViewModel relatorioViewModel,
+        GraficosViewModel graficosViewModel,
         ConfiguracoesViewModel configuracoesViewModel,
         FolhaPagamentoViewModel folhaPagamentoViewModel,
         AuditoriaViewModel auditoriaViewModel,
@@ -81,6 +83,7 @@ public class MainWindowViewModel : BaseViewModel
         _feriasViewModel = feriasViewModel;
         _rpaNfViewModel = rpaNfViewModel;
         _relatorioViewModel = relatorioViewModel;
+        _graficosViewModel = graficosViewModel;
         _configuracoesViewModel = configuracoesViewModel;
         _folhaPagamentoViewModel = folhaPagamentoViewModel;
         _auditoriaViewModel = auditoriaViewModel;
@@ -145,9 +148,13 @@ public class MainWindowViewModel : BaseViewModel
 
     private void MostrarRelatorios()
     {
-        CurrentView = new RelatorioComparativoView { DataContext = _relatorioViewModel };
+        var view = new RelatoriosView();
+        view.ComparativoView.DataContext = _relatorioViewModel;
+        view.GraficosViewControl.DataContext = _graficosViewModel;
+        CurrentView = view;
         StatusMessage = "Relatórios";
         MenuAtivo = "Relatorios";
+        _ = _graficosViewModel.CarregarAsync();
     }
 
     private void MostrarAuditoria()

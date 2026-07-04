@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
-        Title="Login - Sistema RH" Height="380" Width="380" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded">
+        Title="Login - Sistema RH" Height="480" Width="380" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded">
     <Grid Background="{DynamicResource SurfaceBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,7 +12,9 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="20">
-            <StackPanel>
+            <StackPanel HorizontalAlignment="Center">
+                <Image Source="/Assets/logoAltaResolucao.png" Height="72" Margin="0,0,0,10" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True" SnapsToDevicePixels="True"/>
                 <TextBlock Text="Sistema RH" Foreground="{DynamicResource HeaderForeground}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Text="Entre com seu usuário e senha" Foreground="{DynamicResource HeaderSubForeground2}" FontSize="12" Margin="0,5,0,0" HorizontalAlignment="Center"/>
             </StackPanel>
@@ -24,8 +26,16 @@
                      Text="{Binding NomeUsuario, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Text="Senha" FontSize="12" Foreground="{DynamicResource TextLabel}" Margin="0,15,0,5"/>
-            <PasswordBox x:Name="PwdSenha" Padding="10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1" Height="38"
-                         KeyDown="PwdSenha_KeyDown"/>
+            <Grid Height="38">
+                <PasswordBox x:Name="PwdSenha" Padding="10,10,36,10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"
+                             KeyDown="PwdSenha_KeyDown"/>
+                <TextBox x:Name="TxtSenhaVisivel" Padding="10,10,36,10" BorderBrush="{DynamicResource BorderDefault}" BorderThickness="1"
+                         Visibility="Collapsed" KeyDown="PwdSenha_KeyDown"/>
+                <Button x:Name="BtnToggleSenha" Content="👁" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                        Width="34" Background="Transparent" BorderThickness="0" Cursor="Hand" FontSize="14"
+                        Foreground="{DynamicResource TextMuted}" Click="BtnToggleSenha_Click"
+                        ToolTip="Mostrar/ocultar senha"/>
+            </Grid>
 
             <TextBlock Text="{Binding MensagemErro}" Foreground="{DynamicResource BtnDangerBackground}" FontSize="12"
                        Margin="0,15,0,0" TextWrapping="Wrap" HorizontalAlignment="Center"/>

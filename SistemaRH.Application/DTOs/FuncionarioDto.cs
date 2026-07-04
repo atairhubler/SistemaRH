@@ -28,6 +28,7 @@ public abstract class FuncionarioDto
     public string Observacoes { get; set; }
     public decimal AjudaDeCusto { get; set; }
     public string CamposPersonalizadosJson { get; set; } = "{}";
+    public byte[]? Foto { get; set; }
 
     public bool IsAtivo => Status == StatusFuncionario.Ativo;
 }

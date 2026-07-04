@@ -38,6 +38,14 @@ namespace SistemaRH.Desktop
                     File.Copy(restoreFile, dbPath0, overwrite: true);
                     File.Delete(restoreFile);
                     File.Delete(pendingFlag);
+
+                    // Remove sidecars -wal/-shm remanescentes do banco antigo: se não forem
+                    // apagados, o SQLite reaplica essas gravações pendentes por cima do banco
+                    // recém-restaurado, desfazendo parte da restauração.
+                    var walFile = dbPath0 + "-wal";
+                    var shmFile = dbPath0 + "-shm";
+                    if (File.Exists(walFile)) File.Delete(walFile);
+                    if (File.Exists(shmFile)) File.Delete(shmFile);
                 }
 
                 var services = new ServiceCollection();
@@ -70,6 +78,7 @@ namespace SistemaRH.Desktop
                 services.AddScoped<IFeriasService, FeriasService>();
                 services.AddScoped<IContratoPJService, ContratoPJService>();
                 services.AddScoped<IRpaNfService, RpaNfService>();
+                services.AddScoped<IAtestadoService, AtestadoService>();
                 services.AddScoped<IRelatorioService, RelatorioService>();
                 services.AddScoped<IBackupService, BackupService>();
                 services.AddScoped<IGoogleDriveService, GoogleDriveService>();
@@ -90,6 +99,7 @@ namespace SistemaRH.Desktop
                 services.AddScoped<FeriasViewModel>();
                 services.AddScoped<RpaNfViewModel>();
                 services.AddScoped<RelatorioComparativoViewModel>();
+                services.AddScoped<GraficosViewModel>();
                 services.AddScoped<ConfiguracoesViewModel>();
                 services.AddScoped<FuncionarioCLTDetailViewModel>();
                 services.AddScoped<FuncionarioPJDetailViewModel>();
@@ -101,7 +111,9 @@ namespace SistemaRH.Desktop
                 services.AddScoped<UsuarioDetailViewModel>();
                 services.AddScoped<AuditoriaViewModel>();
                 services.AddScoped<HistoricoSalarialViewModel>();
+                services.AddScoped<AtestadosViewModel>();
                 services.AddScoped<CamposPersonalizadosViewModel>();
+                services.AddScoped<FuncionarioPerfilViewModel>();
                 services.AddScoped<CampoPersonalizadoDetailViewModel>();
 
                 ServiceProvider = services.BuildServiceProvider();
@@ -109,6 +121,13 @@ namespace SistemaRH.Desktop
                 // Aplicar migrations
                 using var scope = ServiceProvider.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<RhDbContext>();
+
+                // Garante modo de journal "delete" (não-WAL): o backup copia o arquivo .db
+                // diretamente, e no modo WAL uma gravação recente pode ficar só no arquivo
+                // -wal, fazendo o backup perder dados. Força a conversão aqui mesmo se o
+                // banco já estiver em WAL por algum motivo anterior.
+                context.Database.ExecuteSqlRaw("PRAGMA journal_mode=DELETE;");
+
                 context.Database.Migrate();
 
                 // Seed do usuário administrador inicial (só se não houver nenhum usuário cadastrado)

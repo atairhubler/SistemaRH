@@ -126,6 +126,7 @@ public class FuncionarioService : IFuncionarioService
             Observacoes = dto.Observacoes ?? "",
             AjudaDeCusto = dto.AjudaDeCusto,
             CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
+            Foto = dto.Foto,
             Cargo = dto.Cargo ?? "",
             Departamento = dto.Departamento ?? "",
             DataAdmissao = dto.DataAdmissao,
@@ -196,6 +197,7 @@ public class FuncionarioService : IFuncionarioService
             ValorContratado = dto.ValorContratado,
             Departamento = dto.Departamento ?? "",
             CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
+            Foto = dto.Foto,
             EmpresaId = empresaId,
             Status = StatusFuncionario.Ativo,
             Tipo = TipoFuncionario.PJ,
@@ -251,6 +253,7 @@ public class FuncionarioService : IFuncionarioService
             Bolsa = dto.Bolsa,
             ComplementoSalarial = dto.ComplementoSalarial,
             CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
+            Foto = dto.Foto,
             EmpresaId = empresaId,
             Status = StatusFuncionario.Ativo,
             Tipo = TipoFuncionario.Estagiario,
@@ -307,6 +310,7 @@ public class FuncionarioService : IFuncionarioService
         clt.Ctps = dto.Ctps ?? "";
         clt.PisPassep = dto.PisPassep ?? "";
         clt.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
+        clt.Foto = dto.Foto;
         clt.EmpresaId = dto.EmpresaId;
         clt.DataAtualizacao = DateTime.Now;
 
@@ -352,6 +356,7 @@ public class FuncionarioService : IFuncionarioService
         pj.ValorContratado = dto.ValorContratado;
         pj.Departamento = dto.Departamento ?? "";
         pj.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
+        pj.Foto = dto.Foto;
         pj.EmpresaId = dto.EmpresaId;
         pj.DataAtualizacao = DateTime.Now;
 
@@ -392,6 +397,7 @@ public class FuncionarioService : IFuncionarioService
         estagiario.DataDemissao = dto.DataDemissao;
         estagiario.DataNascimento = dto.DataNascimento;
         estagiario.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
+        estagiario.Foto = dto.Foto;
         estagiario.EmpresaId = dto.EmpresaId;
         estagiario.DataAtualizacao = DateTime.Now;
 

@@ -21,15 +21,36 @@ public partial class LoginView : Window
         }
     }
 
+    private string SenhaAtual => TxtSenhaVisivel.Visibility == Visibility.Visible ? TxtSenhaVisivel.Text : PwdSenha.Password;
+
     private async void BtnEntrar_Click(object sender, RoutedEventArgs e)
     {
         if (DataContext is LoginViewModel vm)
-            await vm.EntrarAsync(PwdSenha.Password);
+            await vm.EntrarAsync(SenhaAtual);
     }
 
     private async void PwdSenha_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && DataContext is LoginViewModel vm)
-            await vm.EntrarAsync(PwdSenha.Password);
+            await vm.EntrarAsync(SenhaAtual);
+    }
+
+    private void BtnToggleSenha_Click(object sender, RoutedEventArgs e)
+    {
+        var mostrando = TxtSenhaVisivel.Visibility == Visibility.Visible;
+        if (mostrando)
+        {
+            PwdSenha.Password = TxtSenhaVisivel.Text;
+            PwdSenha.Visibility = Visibility.Visible;
+            TxtSenhaVisivel.Visibility = Visibility.Collapsed;
+            BtnToggleSenha.Content = "👁";
+        }
+        else
+        {
+            TxtSenhaVisivel.Text = PwdSenha.Password;
+            TxtSenhaVisivel.Visibility = Visibility.Visible;
+            PwdSenha.Visibility = Visibility.Collapsed;
+            BtnToggleSenha.Content = "🙈";
+        }
     }
 }

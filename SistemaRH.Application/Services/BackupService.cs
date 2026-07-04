@@ -1,18 +1,22 @@
 using System.IO.Compression;
+using Microsoft.EntityFrameworkCore;
 using SistemaRH.Application.Interfaces;
+using SistemaRH.Data;
 
 namespace SistemaRH.Application.Services;
 
 public class BackupService : IBackupService
 {
+    private readonly RhDbContext _context;
     private readonly string _appDataDir;
     private readonly string _backupDirectory;
     private readonly string _databasePath;
     private readonly string _configPath;
     private readonly string _tabelasPath;
 
-    public BackupService()
+    public BackupService(RhDbContext context)
     {
+        _context = context;
         _appDataDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "SistemaRH");
@@ -128,6 +132,12 @@ public class BackupService : IBackupService
     // processo do SQLite que mantém o .db aberto enquanto a aplicação roda.
     private void CriarZip(string zipPath)
     {
+        // Se o banco estiver em modo WAL, uma gravação recente pode estar só no
+        // arquivo -wal e não no sistemarh.db ainda. Forçar o checkpoint garante
+        // que tudo que já foi salvo esteja de fato no arquivo antes de copiá-lo.
+        // Não tem efeito (é seguro chamar) quando o banco já está em modo delete.
+        try { _context.Database.ExecuteSqlRaw("PRAGMA wal_checkpoint(TRUNCATE);"); } catch { }
+
         using var zip = ZipFile.Open(zipPath, ZipArchiveMode.Create);
         AdicionarEntrada(zip, _databasePath, "sistemarh.db");
         AdicionarEntrada(zip, _configPath,   "config.json");

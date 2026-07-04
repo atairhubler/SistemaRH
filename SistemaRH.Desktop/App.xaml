@@ -12,6 +12,7 @@
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
             <conv:StringEqualsConverter x:Key="StringEqualsConverter"/>
+            <conv:ByteArrayToImageSourceConverter x:Key="ByteArrayToImageSourceConverter"/>
             <conv:StatusPeriodoAquisitivoToTextoConverter x:Key="StatusPeriodoAquisitivoToTextoConverter"/>
             <conv:StatusPeriodoAquisitivoToCorConverter x:Key="StatusPeriodoAquisitivoToCorConverter"/>
         </ResourceDictionary>

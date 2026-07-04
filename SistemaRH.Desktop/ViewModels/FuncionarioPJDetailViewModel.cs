@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Windows.Input;
 using SistemaRH.Application.DTOs;
 using SistemaRH.Application.Interfaces;
+using SistemaRH.Desktop.Helpers;
 using SistemaRH.Desktop.Services;
 using SistemaRH.Domain.Enums;
 
@@ -50,6 +51,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     private bool _comissionado;
     private string _observacoes = "";
     private decimal _ajudaDeCusto;
+    private byte[]? _foto;
     private ObservableCollection<CampoPersonalizadoValorViewModel> _camposPersonalizados = new();
 
     public string Titulo => _isEdit ? "Editar Funcionário PJ" : "Novo Funcionário PJ";
@@ -97,6 +99,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public bool Comissionado { get => _comissionado; set => SetProperty(ref _comissionado, value); }
     public string Observacoes { get => _observacoes; set => SetProperty(ref _observacoes, value); }
     public decimal AjudaDeCusto { get => _ajudaDeCusto; set => SetProperty(ref _ajudaDeCusto, value); }
+    public byte[]? Foto { get => _foto; set => SetProperty(ref _foto, value); }
 
     public ObservableCollection<CampoPersonalizadoValorViewModel> CamposPersonalizados
     {
@@ -113,6 +116,8 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public ICommand SalvarCommand { get; }
     public ICommand CancelarCommand { get; }
     public ICommand AbrirHistoricoCommand { get; }
+    public ICommand AbrirAtestadosCommand { get; }
+    public ICommand SelecionarFotoCommand { get; }
 
     public FuncionarioPJDetailViewModel(
         IFuncionarioService funcionarioService,
@@ -128,6 +133,8 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         SalvarCommand = new RelayCommand(_ => _ = SalvarAsync());
         CancelarCommand = new RelayCommand(_ => Cancelar());
         AbrirHistoricoCommand = new RelayCommand(_ => AbrirHistorico());
+        AbrirAtestadosCommand = new RelayCommand(_ => AbrirAtestados());
+        SelecionarFotoCommand = new RelayCommand(_ => _ = SelecionarFotoAsync());
     }
 
     public void PrepararNovo()
@@ -142,6 +149,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         ValorServico = 0; ValorContratado = 0; Departamento = "";
         Genero = ""; Ramal = ""; DadosBancarios = ""; Comissionado = false; Observacoes = ""; AjudaDeCusto = 0;
         EmpresaSelecionada = null;
+        Foto = null;
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync();
@@ -182,6 +190,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         Comissionado = dto.Comissionado;
         Observacoes = dto.Observacoes ?? "";
         AjudaDeCusto = dto.AjudaDeCusto;
+        Foto = dto.Foto;
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync(dto.EmpresaId);
@@ -280,6 +289,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
                 Observacoes = Observacoes,
                 AjudaDeCusto = AjudaDeCusto,
                 CamposPersonalizadosJson = SerializarCamposPersonalizados(),
+                Foto = Foto,
                 EmpresaId = EmpresaSelecionada!.Id
             };
 
@@ -312,6 +322,30 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         var dialog = new Views.HistoricoSalarialView();
         dialog.ShowDialog();
         if (vm != null) ValorServico = vm.ValorAtual;
+    }
+
+    private void AbrirAtestados()
+    {
+        if (!_isEdit || _id == 0) return;
+        var vm = App.ServiceProvider.GetService(typeof(AtestadosViewModel)) as AtestadosViewModel;
+        vm?.Preparar(_id);
+        var dialog = new Views.AtestadosView();
+        dialog.ShowDialog();
+    }
+
+    private async Task SelecionarFotoAsync()
+    {
+        var caminho = await _dialogService.AbrirArquivoAsync("Imagens|*.jpg;*.jpeg;*.png;*.bmp");
+        if (string.IsNullOrEmpty(caminho)) return;
+
+        try
+        {
+            Foto = ImagemHelper.RedimensionarParaJpeg(caminho);
+        }
+        catch (Exception ex)
+        {
+            await _dialogService.ShowErrorAsync("Erro", $"Não foi possível carregar a imagem: {ex.Message}");
+        }
     }
 
     private void Cancelar() => FecharJanela?.Invoke();

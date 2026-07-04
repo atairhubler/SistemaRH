@@ -34,6 +34,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Total Funcionários -->
@@ -47,7 +48,7 @@
             <!-- CLT -->
             <Border Grid.Column="1" Background="{DynamicResource AccentGreenBackground}" BorderBrush="{DynamicResource AccentGreenBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="5,0,5,0">
                 <StackPanel>
-                    <TextBlock Text="Funcionários CLT" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
+                    <TextBlock Text="CLT" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalCLT}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource AccentGreenForeground}"/>
                 </StackPanel>
             </Border>
@@ -55,13 +56,21 @@
             <!-- PJ -->
             <Border Grid.Column="2" Background="{DynamicResource AccentPinkBackground}" BorderBrush="{DynamicResource AccentPinkBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="5,0,5,0">
                 <StackPanel>
-                    <TextBlock Text="Funcionários PJ" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
+                    <TextBlock Text="PJ" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding TotalPJ}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource AccentPinkForeground}"/>
                 </StackPanel>
             </Border>
 
+            <!-- Estagiários -->
+            <Border Grid.Column="3" Background="{DynamicResource AccentBlueBackground}" BorderBrush="{DynamicResource AccentBlueBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="5,0,5,0">
+                <StackPanel>
+                    <TextBlock Text="Estagiários" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding TotalEstagiario}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}"/>
+                </StackPanel>
+            </Border>
+
             <!-- Custo Mensal -->
-            <Border Grid.Column="3" Background="{DynamicResource AccentYellowBackground}" BorderBrush="{DynamicResource AccentYellowBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="5,0,0,0">
+            <Border Grid.Column="4" Background="{DynamicResource AccentYellowBackground}" BorderBrush="{DynamicResource AccentYellowBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="5,0,0,0">
                 <StackPanel>
                     <TextBlock Text="Custo Mensal Total" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,0,5"/>
                     <TextBlock Text="{Binding CustoCLTMensal, StringFormat='R$ {0:N2}'}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AccentYellowForeground}"/>
@@ -70,40 +79,78 @@
         </Grid>
 
         <!-- Conteúdo Adicional -->
-        <Grid Grid.Row="2" Margin="20,0,20,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="2" Margin="20,0,20,20" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
 
-            <!-- Alerta de Férias -->
-            <Border Grid.Row="0" Background="#FEF3C7" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="5"
-                    Padding="15" Margin="0,0,0,10"
-                    Visibility="{Binding TemAlertaFerias, Converter={StaticResource BoolToVisibilityConverter}}">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <TextBlock Text="⚠️" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBlock Text="Funcionários CLT com mais de 12 meses sem férias"
-                                   FontWeight="Bold" FontSize="14" Foreground="#92400E" VerticalAlignment="Center"/>
+                <!-- Alerta de Férias -->
+                <Border Background="{DynamicResource AccentYellowBackground}" BorderBrush="{DynamicResource AccentYellowBorder}" BorderThickness="1" CornerRadius="5"
+                        Padding="15" Margin="0,0,0,10"
+                        Visibility="{Binding TemAlertaFerias, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="⚠️" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Funcionários CLT com mais de 12 meses sem férias"
+                                       FontWeight="Bold" FontSize="14" Foreground="{DynamicResource AccentYellowForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding FuncionariosAlertaFerias}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="{DynamicResource AccentYellowForeground}" FontSize="13" Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{Binding FuncionariosAlertaFerias}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" Foreground="#92400E" FontSize="13" Margin="0,2"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                </Border>
 
-            <!-- Boas-vindas -->
-            <Border Grid.Row="1" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="🎉" FontSize="48" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Bem-vindo ao Sistema RH" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,5" Foreground="{DynamicResource AccentBlueForeground}"/>
-                    <TextBlock Text="Selecione uma opção no menu para começar" FontSize="14" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
-                </StackPanel>
-            </Border>
-        </Grid>
+                <!-- Alerta de Aniversariantes -->
+                <Border Background="{DynamicResource AccentPinkBackground}" BorderBrush="{DynamicResource AccentPinkBorder}" BorderThickness="1" CornerRadius="5"
+                        Padding="15" Margin="0,0,0,10"
+                        Visibility="{Binding TemAniversariantes, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="🎂" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Aniversariantes do mês"
+                                       FontWeight="Bold" FontSize="14" Foreground="{DynamicResource AccentPinkForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding Aniversariantes}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="{DynamicResource AccentPinkForeground}" FontSize="13" Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Alerta de Tempo de Casa -->
+                <Border Background="{DynamicResource AccentGreenBackground}" BorderBrush="{DynamicResource AccentGreenBorder}" BorderThickness="1" CornerRadius="5"
+                        Padding="15" Margin="0,0,0,10"
+                        Visibility="{Binding TemTemposDeCasa, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="🏆" FontSize="16" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Aniversário de empresa este mês"
+                                       FontWeight="Bold" FontSize="14" Foreground="{DynamicResource AccentGreenForeground}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ItemsControl ItemsSource="{Binding TemposDeCasa}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="{DynamicResource AccentGreenForeground}" FontSize="13" Margin="0,2"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Boas-vindas -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="🎉" FontSize="32" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Bem-vindo ao Sistema RH" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,8,0,4" Foreground="{DynamicResource AccentBlueForeground}"/>
+                        <TextBlock Text="Selecione uma opção no menu para começar" FontSize="13" HorizontalAlignment="Center" Foreground="{DynamicResource TextMuted}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

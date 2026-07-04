@@ -1,0 +1,167 @@
+<Window x:Class="SistemaRH.Desktop.Views.FuncionarioPerfilView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Perfil do Funcionário" Height="700" Width="720"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource SurfaceBackground}"
+        Loaded="Window_Loaded">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Cabeçalho -->
+        <Border Grid.Row="0" Background="{DynamicResource AccentBlueBackground}" BorderBrush="{DynamicResource AccentBlueBorder}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <Grid Width="64" Height="64" Margin="0,0,15,0">
+                    <Ellipse Fill="{DynamicResource CardBackground}" Stroke="{DynamicResource AccentBlueBorder}" StrokeThickness="1"/>
+                    <TextBlock Text="👤" FontSize="26" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextFaint}"/>
+                    <Ellipse>
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Foto, Converter={StaticResource ByteArrayToImageSourceConverter}}" Stretch="UniformToFill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Nome}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock Text="{Binding TipoTexto}" FontSize="13" Foreground="{DynamicResource TextMuted}" Margin="0,0,15,0"/>
+                        <TextBlock Text="{Binding StatusTexto}" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource TextMuted}"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Conteúdo -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- Dados Cadastrais -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,0,0,10">
+                    <StackPanel>
+                        <TextBlock Text="Dados Cadastrais" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,10"/>
+                        <ItemsControl ItemsSource="{Binding DadosCadastrais}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="2"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,15,10">
+                                        <TextBlock Text="{Binding Rotulo}" FontSize="11" Foreground="{DynamicResource TextFaint}"/>
+                                        <TextBlock Text="{Binding Valor}" FontSize="13" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Histórico Salarial -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15" Margin="0,0,0,10"
+                        Visibility="{Binding TemHistoricoSalarial, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding RotuloValorHistorico, StringFormat='Histórico de {0}'}" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,10"/>
+                        <DataGrid ItemsSource="{Binding HistoricoSalarial}" AutoGenerateColumns="False" IsReadOnly="True"
+                                  CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="180"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="30"
+                                  Background="{DynamicResource DataGridBackground}"
+                                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                  BorderThickness="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Vigência" Binding="{Binding DataVigencia, StringFormat=dd/MM/yyyy}" Width="100"/>
+                                <DataGridTextColumn Header="Valor" Binding="{Binding SalarioBruto, StringFormat=C2}" Width="120"/>
+                                <DataGridTextColumn Header="Motivo" Binding="{Binding Motivo}" Width="*"/>
+                                <DataGridTextColumn Header="Observações" Binding="{Binding Observacoes}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Férias -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15"
+                        Visibility="{Binding TemFerias, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Férias" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,10"/>
+                        <ItemsControl ItemsSource="{Binding PeriodosFerias}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{DynamicResource BorderCard}" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,10">
+                                        <StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                <TextBlock Text="{Binding Periodo.NumeroPeriodo, StringFormat='Período nº {0}'}" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource TextPrimary}" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding Periodo.DataInicio, StringFormat=dd/MM/yyyy}" FontSize="12" Foreground="{DynamicResource TextMuted}"/>
+                                                <TextBlock Text=" a " FontSize="12" Foreground="{DynamicResource TextMuted}"/>
+                                                <TextBlock Text="{Binding Periodo.DataFim, StringFormat=dd/MM/yyyy}" FontSize="12" Foreground="{DynamicResource TextMuted}" Margin="0,0,10,0"/>
+                                                <TextBlock Text="{Binding Periodo.Status, Converter={StaticResource StatusPeriodoAquisitivoToTextoConverter}}"
+                                                           FontSize="12" FontWeight="Bold"
+                                                           Foreground="{Binding Periodo.Status, Converter={StaticResource StatusPeriodoAquisitivoToCorConverter}}"/>
+                                            </StackPanel>
+
+                                            <DataGrid ItemsSource="{Binding Usos}" AutoGenerateColumns="False" IsReadOnly="True"
+                                                      CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="120"
+                                                      GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="28"
+                                                      Background="{DynamicResource DataGridBackground}"
+                                                      AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                                      BorderThickness="0"
+                                                      Visibility="{Binding TemUsos, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Início" Binding="{Binding DataInicio, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                                    <DataGridTextColumn Header="Fim" Binding="{Binding DataFim, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                                    <DataGridTextColumn Header="Dias" Binding="{Binding Dias}" Width="50"/>
+                                                    <DataGridTextColumn Header="Tipo" Binding="{Binding TipoUso}" Width="120"/>
+                                                    <DataGridTextColumn Header="Remunerada" Binding="{Binding Remunerada}" Width="*"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Atestados -->
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderCard}" BorderThickness="1" CornerRadius="5" Padding="15"
+                        Visibility="{Binding TemAtestados, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Atestados" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextLabel}" Margin="0,0,0,10"/>
+                        <DataGrid ItemsSource="{Binding Atestados}" AutoGenerateColumns="False" IsReadOnly="True"
+                                  CanUserAddRows="False" CanUserDeleteRows="False" MaxHeight="180"
+                                  GridLinesVisibility="Horizontal" HeadersVisibility="Column" RowHeight="30"
+                                  Background="{DynamicResource DataGridBackground}"
+                                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                  BorderThickness="0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Data" Binding="{Binding DataAtestado, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="140"/>
+                                <DataGridTextColumn Header="Início" Binding="{Binding DataInicio, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                <DataGridTextColumn Header="Fim" Binding="{Binding DataFim, StringFormat=dd/MM/yyyy}" Width="90"/>
+                                <DataGridTextColumn Header="Dias" Binding="{Binding DiasFaltados}" Width="50"/>
+                                <DataGridTemplateColumn Header="" Width="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Baixar" Padding="8,4" FontSize="11"
+                                                    Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}"
+                                                    Command="{Binding DataContext.BaixarAtestadoCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}" Cursor="Hand"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Rodapé -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+            <Button Content="Fechar" Padding="20,8" Command="{Binding FecharCommand}"
+                    Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Cursor="Hand"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,15 @@
+<UserControl x:Class="SistemaRH.Desktop.Views.RelatoriosView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SistemaRH.Desktop.Views">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <TabControl Background="Transparent" BorderThickness="0">
+            <TabItem Header="Comparativo CLT vs PJ">
+                <local:RelatorioComparativoView x:Name="ComparativoView"/>
+            </TabItem>
+            <TabItem Header="Gráficos">
+                <local:GraficosView x:Name="GraficosViewControl"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

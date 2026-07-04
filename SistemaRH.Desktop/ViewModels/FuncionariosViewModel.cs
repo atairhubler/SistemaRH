@@ -63,6 +63,7 @@ public class FuncionariosViewModel : BaseViewModel
     public ICommand RefreshCommand { get; }
     public ICommand NovoCommand { get; }
     public ICommand EditarCommand { get; }
+    public ICommand PerfilCommand { get; }
     public ICommand AtivarCommand { get; }
     public ICommand DesativarCommand { get; }
     public ICommand ExportarCsvCommand { get; }
@@ -83,6 +84,7 @@ public class FuncionariosViewModel : BaseViewModel
         RefreshCommand = new RelayCommand(_ => _ = CarregarAsync());
         NovoCommand = new RelayCommand(_ => NovoFuncionario());
         EditarCommand = new RelayCommand(param => _ = EditarFuncionario(param as FuncionarioDto));
+        PerfilCommand = new RelayCommand(param => AbrirPerfil(param as FuncionarioDto));
         AtivarCommand = new RelayCommand(param => _ = AtivarFuncionario(param as FuncionarioDto));
         DesativarCommand = new RelayCommand(param => _ = DesativarFuncionario(param as FuncionarioDto));
         ExportarCsvCommand = new RelayCommand(_ => _ = ExportarCsvAsync());
@@ -207,6 +209,16 @@ public class FuncionariosViewModel : BaseViewModel
         }
 
         await CarregarAsync();
+    }
+
+    private void AbrirPerfil(FuncionarioDto? funcionario)
+    {
+        if (funcionario == null) return;
+
+        var vm = App.ServiceProvider.GetService(typeof(FuncionarioPerfilViewModel)) as FuncionarioPerfilViewModel;
+        vm?.Preparar(funcionario);
+        var dialog = new Views.FuncionarioPerfilView();
+        dialog.ShowDialog();
     }
 
     private async Task AtivarFuncionario(FuncionarioDto? funcionario)

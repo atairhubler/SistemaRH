@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SistemaRH.Application.DTOs;
@@ -151,5 +152,90 @@ public class RelatorioService : IRelatorioService
         using var ms = new MemoryStream();
         workbook.SaveAs(ms);
         return ms.ToArray();
+    }
+
+    public async Task<List<TendenciaMensalItemDto>> GetTendenciaMensalAsync(int empresaId, int meses = 6)
+    {
+        var cltQuery = _context.FuncionariosCLT.AsQueryable();
+        var pjQuery = _context.FuncionariosPJ.AsQueryable();
+        var estagiarioQuery = _context.FuncionariosEstagiario.AsQueryable();
+
+        if (empresaId > 0)
+        {
+            cltQuery = cltQuery.Where(c => c.EmpresaId == empresaId);
+            pjQuery = pjQuery.Where(p => p.EmpresaId == empresaId);
+            estagiarioQuery = estagiarioQuery.Where(e => e.EmpresaId == empresaId);
+        }
+
+        var cltList = await cltQuery.ToListAsync();
+        var pjList = await pjQuery.ToListAsync();
+        var estagiarioList = await estagiarioQuery.ToListAsync();
+
+        var cltIds = cltList.Select(c => c.Id).ToList();
+        var pjIds = pjList.Select(p => p.Id).ToList();
+
+        var historicoPorFuncionario = (await _context.SalarioHistorico
+                .Where(s => cltIds.Contains(s.FuncionarioId))
+                .ToListAsync())
+            .GroupBy(s => s.FuncionarioId)
+            .ToDictionary(g => g.Key, g => g.OrderByDescending(s => s.DataVigencia).ToList());
+
+        var rpasNfs = await _context.RpasNfsPJ
+            .Where(r => pjIds.Contains(r.FuncionarioPJId))
+            .ToListAsync();
+
+        var hoje = DateTime.Now;
+        var meseAno = Enumerable.Range(0, meses)
+            .Select(i => hoje.AddMonths(-(meses - 1 - i)))
+            .Select(d => (d.Year, d.Month))
+            .ToList();
+
+        var resultado = new List<TendenciaMensalItemDto>();
+        var ptBR = new CultureInfo("pt-BR");
+
+        foreach (var (ano, mes) in meseAno)
+        {
+            var fimDoMes = new DateTime(ano, mes, DateTime.DaysInMonth(ano, mes));
+
+            var cltAtivos = cltList
+                .Where(c => c.DataAdmissao <= fimDoMes && (c.DataDemissao == null || c.DataDemissao >= fimDoMes))
+                .ToList();
+            var pjAtivos = pjList
+                .Where(p => (p.DataInicio == null || p.DataInicio <= fimDoMes) && (p.DataFim == null || p.DataFim >= fimDoMes))
+                .ToList();
+            var estagiarioAtivos = estagiarioList
+                .Where(e => e.DataAdmissao <= fimDoMes && (e.DataDemissao == null || e.DataDemissao >= fimDoMes))
+                .ToList();
+
+            decimal custoCLT = 0;
+            foreach (var clt in cltAtivos)
+            {
+                if (historicoPorFuncionario.TryGetValue(clt.Id, out var historico))
+                {
+                    var vigente = historico.FirstOrDefault(h => h.DataVigencia <= fimDoMes);
+                    custoCLT += vigente?.SalarioBruto ?? clt.SalarioBruto;
+                }
+                else
+                {
+                    custoCLT += clt.SalarioBruto;
+                }
+            }
+
+            var custoPJ = rpasNfs.Where(r => r.Mes == mes && r.Ano == ano).Sum(r => r.ValorBruto);
+
+            resultado.Add(new TendenciaMensalItemDto
+            {
+                Mes = mes,
+                Ano = ano,
+                Rotulo = new DateTime(ano, mes, 1).ToString("MMM/yy", ptBR),
+                TotalCLT = cltAtivos.Count,
+                TotalPJ = pjAtivos.Count,
+                TotalEstagiario = estagiarioAtivos.Count,
+                CustoCLT = custoCLT,
+                CustoPJ = custoPJ
+            });
+        }
+
+        return resultado;
     }
 }
