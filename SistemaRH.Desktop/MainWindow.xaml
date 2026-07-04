@@ -6,9 +6,40 @@
         xmlns:local="clr-namespace:SistemaRH.Desktop"
         mc:Ignorable="d"
         Title="Sistema RH" Height="700" Width="1200" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="SidebarNavButtonBase" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextLabel}"/>
+            <Setter Property="BorderThickness" Value="3,0,0,0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="6,1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SidebarGroupLabel" TargetType="TextBlock">
+            <Setter Property="Text" Value=""/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextFaint}"/>
+            <Setter Property="Margin" Value="12,14,0,4"/>
+            <Setter Property="Visibility" Value="{Binding SidebarRecolhida, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+        </Style>
+        <Style x:Key="SidebarNavLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Visibility" Value="{Binding SidebarRecolhida, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+        </Style>
+    </Window.Resources>
     <Grid Background="{DynamicResource AppBackground}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -28,27 +59,254 @@
             </Grid>
         </Border>
 
-        <!-- Menu -->
-        <Border Grid.Row="1" Background="{DynamicResource SurfaceBackground}" Padding="10">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="📊 Dashboard" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding DashboardCommand}"/>
-                <Button Content="🏢 Empresas" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding EmpresasCommand}"/>
-                <Button Content="👥 Funcionários" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding FuncionariosCommand}"/>
-                <Button Content="📋 Férias" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding FeriasCommand}"/>
-                <Button Content="💰 Folha CLT" Padding="10,5" Margin="5" Background="{DynamicResource BtnSuccessBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding FolhaPagamentoCommand}"/>
-                <Button Content="📄 RPA/NF PJ" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding RpaNfCommand}"/>
-                <Button Content="📊 Relatórios" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding RelatoriosCommand}"/>
-                <Button Content="🕵️ Auditoria" Padding="10,5" Margin="5" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding AuditoriaCommand}"/>
-                <Separator Width="1" Margin="10,0"/>
-                <Button Content="⚙️ Configurações" Padding="10,5" Margin="5" Background="{DynamicResource BtnSettingsBackground}" Foreground="{DynamicResource BtnForeground}" Command="{Binding ConfiguracoesCommand}"/>
-            </StackPanel>
-        </Border>
+        <!-- Corpo: menu lateral + conteúdo -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- Conteúdo Principal -->
-        <ContentControl Grid.Row="2" Content="{Binding CurrentView}" Margin="15"/>
+            <!-- Menu Lateral -->
+            <Border Grid.Column="0" Background="{DynamicResource SurfaceBackground}"
+                    BorderBrush="{DynamicResource BorderCard}" BorderThickness="0,0,1,0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Width" Value="210"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SidebarRecolhida}" Value="True">
+                                <Setter Property="Width" Value="56"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Recolher/Expandir -->
+                    <Button Grid.Row="0" Content="☰" HorizontalAlignment="Right" Margin="6"
+                            Padding="8,4" Background="Transparent" BorderThickness="0"
+                            Foreground="{DynamicResource TextMuted}" Cursor="Hand" FontSize="14"
+                            Command="{Binding AlternarSidebarCommand}"
+                            ToolTip="Expandir/recolher menu"/>
+
+                    <!-- Itens de navegação -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel>
+                            <Button Command="{Binding DashboardCommand}" ToolTip="Dashboard">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Dashboard"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📊" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Dashboard" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <TextBlock Text="CADASTROS" Style="{StaticResource SidebarGroupLabel}"/>
+                            <Button Command="{Binding EmpresasCommand}" ToolTip="Empresas">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Empresas"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🏢" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Empresas" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding FuncionariosCommand}" ToolTip="Funcionários">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Funcionarios"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="👥" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Funcionários" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <TextBlock Text="OPERACIONAL" Style="{StaticResource SidebarGroupLabel}"/>
+                            <Button Command="{Binding FeriasCommand}" ToolTip="Férias">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Ferias"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📋" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Férias" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding FolhaPagamentoCommand}" ToolTip="Folha CLT">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="FolhaCLT"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentGreenBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentGreenForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentGreenBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="💰" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Folha CLT" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding RpaNfCommand}" ToolTip="RPA/NF PJ">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="RpaNf"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📄" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="RPA/NF PJ" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+
+                            <TextBlock Text="RELATÓRIOS" Style="{StaticResource SidebarGroupLabel}"/>
+                            <Button Command="{Binding RelatoriosCommand}" ToolTip="Relatórios">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Relatorios"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📊" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Relatórios" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding AuditoriaCommand}" ToolTip="Auditoria">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                        <Style.Triggers>
+                                            <DataTrigger Value="True">
+                                                <DataTrigger.Binding>
+                                                    <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Auditoria"/>
+                                                </DataTrigger.Binding>
+                                                <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🕵️" FontSize="15" Width="20" TextAlignment="Center"/>
+                                    <TextBlock Text="Auditoria" Style="{StaticResource SidebarNavLabel}"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Configurações fixo na base -->
+                    <StackPanel Grid.Row="2">
+                        <Border Height="1" Background="{DynamicResource BorderCard}" Margin="10,4"/>
+                        <Button Command="{Binding ConfiguracoesCommand}" ToolTip="Configurações">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SidebarNavButtonBase}">
+                                    <Style.Triggers>
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <Binding Path="MenuAtivo" Converter="{StaticResource StringEqualsConverter}" ConverterParameter="Configuracoes"/>
+                                            </DataTrigger.Binding>
+                                            <Setter Property="Background" Value="{DynamicResource AccentBlueBackground}"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource AccentBlueForeground}"/>
+                                            <Setter Property="FontWeight" Value="Bold"/>
+                                            <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBorder}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚙️" FontSize="15" Width="20" TextAlignment="Center"/>
+                                <TextBlock Text="Configurações" Style="{StaticResource SidebarNavLabel}"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Conteúdo Principal -->
+            <ContentControl Grid.Column="1" Content="{Binding CurrentView}" Margin="15"/>
+        </Grid>
 
         <!-- Status Bar -->
-        <Border Grid.Row="3" Background="{DynamicResource StatusBarBackground}" BorderBrush="{DynamicResource BorderStatusBar}" BorderThickness="0,1,0,0" Padding="10,5">
+        <Border Grid.Row="2" Background="{DynamicResource StatusBarBackground}" BorderBrush="{DynamicResource BorderStatusBar}" BorderThickness="0,1,0,0" Padding="10,5">
             <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextMuted}" FontSize="12"/>
         </Border>
     </Grid>

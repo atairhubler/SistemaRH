@@ -9,7 +9,7 @@ public abstract class Funcionario
     public TipoFuncionario Tipo { get; set; }
     public string Nome { get; set; }
     public string Email { get; set; }
-    public string EmailAgil { get; set; }
+    public string EmailEmpresa { get; set; }
     public string Contratante { get; set; }
     public string Telefone { get; set; }
     public string Endereco { get; set; }
@@ -27,6 +27,7 @@ public abstract class Funcionario
     public bool Comissionado { get; set; }
     public string Observacoes { get; set; }
     public decimal AjudaDeCusto { get; set; }
+    public string CamposPersonalizadosJson { get; set; } = "{}";
 
     // Navegação
     public Empresa Empresa { get; set; }

@@ -77,6 +77,7 @@ namespace SistemaRH.Desktop
                 services.AddScoped<IUsuarioService, UsuarioService>();
                 services.AddScoped<IAuditoriaService, AuditoriaService>();
                 services.AddScoped<IHistoricoSalarialService, HistoricoSalarialService>();
+                services.AddScoped<ICampoPersonalizadoService, CampoPersonalizadoService>();
 
                 // Desktop Services
                 services.AddScoped<IDialogService, DialogService>();
@@ -100,6 +101,8 @@ namespace SistemaRH.Desktop
                 services.AddScoped<UsuarioDetailViewModel>();
                 services.AddScoped<AuditoriaViewModel>();
                 services.AddScoped<HistoricoSalarialViewModel>();
+                services.AddScoped<CamposPersonalizadosViewModel>();
+                services.AddScoped<CampoPersonalizadoDetailViewModel>();
 
                 ServiceProvider = services.BuildServiceProvider();
 

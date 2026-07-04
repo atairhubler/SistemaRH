@@ -21,6 +21,7 @@ public class RhDbContext : DbContext
     public DbSet<Atestado> Atestados { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<LogAuditoria> LogsAuditoria { get; set; }
+    public DbSet<CampoPersonalizado> CamposPersonalizados { get; set; }
 
     public RhDbContext(DbContextOptions<RhDbContext> options) : base(options)
     {
@@ -306,6 +307,7 @@ public class RhDbContext : DbContext
         nameof(RpaNfPJ) => "RPA/NF",
         nameof(SalarioHistorico) => "Histórico Salarial",
         nameof(Usuario) => "Usuário",
+        nameof(CampoPersonalizado) => "Campo Personalizado",
         _ => tipo.Name
     };
 
@@ -314,6 +316,7 @@ public class RhDbContext : DbContext
         Funcionario f => f.Nome ?? "",
         Empresa e => e.RazaoSocial ?? "",
         Usuario u => u.NomeUsuario ?? "",
+        CampoPersonalizado c => c.Rotulo ?? "",
         _ => ""
     };
 }

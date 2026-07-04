@@ -50,6 +50,7 @@ public class ConfiguracoesViewModel : BaseViewModel
     public ICommand AbrirPastaBackupCommand { get; }
     public ICommand SelecionarCorCommand { get; }
     public ICommand GerenciarUsuariosCommand { get; }
+    public ICommand GerenciarCamposCommand { get; }
 
     public ConfiguracoesViewModel(
         IBackupService backupService,
@@ -68,11 +69,18 @@ public class ConfiguracoesViewModel : BaseViewModel
         AbrirPastaBackupCommand = new RelayCommand(_ => _ = AbrirPastaBackupAsync());
         SelecionarCorCommand = new RelayCommand(param => TemaCor = param?.ToString() ?? "Azul");
         GerenciarUsuariosCommand = new RelayCommand(_ => AbrirUsuarios());
+        GerenciarCamposCommand = new RelayCommand(_ => AbrirCamposPersonalizados());
     }
 
     private void AbrirUsuarios()
     {
         var dialog = new Views.UsuariosView();
+        dialog.ShowDialog();
+    }
+
+    private void AbrirCamposPersonalizados()
+    {
+        var dialog = new Views.CamposPersonalizadosView();
         dialog.ShowDialog();
     }
 

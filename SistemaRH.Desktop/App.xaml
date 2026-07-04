@@ -11,6 +11,7 @@
             </ResourceDictionary.MergedDictionaries>
             <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <conv:StringEqualsConverter x:Key="StringEqualsConverter"/>
             <conv:StatusPeriodoAquisitivoToTextoConverter x:Key="StatusPeriodoAquisitivoToTextoConverter"/>
             <conv:StatusPeriodoAquisitivoToCorConverter x:Key="StatusPeriodoAquisitivoToCorConverter"/>
         </ResourceDictionary>

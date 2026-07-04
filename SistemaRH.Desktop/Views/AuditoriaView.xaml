@@ -27,9 +27,9 @@
                          BorderBrush="{DynamicResource BorderDefault}"
                          Tag="🔍 Filtrar por usuário..."/>
                 <TextBlock Text="De:" VerticalAlignment="Center" Margin="15,0,5,0" Foreground="{DynamicResource TextLabel}"/>
-                <DatePicker Width="130" Height="34" SelectedDate="{Binding DataInicio}"/>
+                <DatePicker Width="160" Height="34" SelectedDate="{Binding DataInicio}"/>
                 <TextBlock Text="Até:" VerticalAlignment="Center" Margin="15,0,5,0" Foreground="{DynamicResource TextLabel}"/>
-                <DatePicker Width="130" Height="34" SelectedDate="{Binding DataFim}"/>
+                <DatePicker Width="160" Height="34" SelectedDate="{Binding DataFim}"/>
                 <Button Content="Atualizar" Command="{Binding RefreshCommand}" Margin="15,0,0,0"
                         Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8" Cursor="Hand"/>
             </StackPanel>

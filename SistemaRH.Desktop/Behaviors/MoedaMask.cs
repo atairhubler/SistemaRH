@@ -12,7 +12,7 @@ public static class MoedaMask
         "Valor",
         typeof(decimal),
         typeof(MoedaMask),
-        new FrameworkPropertyMetadata(0m, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValorChanged));
+        new FrameworkPropertyMetadata(decimal.MinValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValorChanged));
 
     public static decimal GetValor(DependencyObject obj) => (decimal)obj.GetValue(ValorProperty);
     public static void SetValor(DependencyObject obj, decimal value) => obj.SetValue(ValorProperty, value);

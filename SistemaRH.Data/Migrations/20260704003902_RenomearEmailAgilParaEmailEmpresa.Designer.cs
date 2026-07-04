@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaRH.Data;
 
@@ -10,9 +11,11 @@ using SistemaRH.Data;
 namespace SistemaRH.Data.Migrations
 {
     [DbContext(typeof(RhDbContext))]
-    partial class RhDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260704003902_RenomearEmailAgilParaEmailEmpresa")]
+    partial class RenomearEmailAgilParaEmailEmpresa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -70,40 +73,6 @@ namespace SistemaRH.Data.Migrations
                     b.HasIndex("FuncionarioId", "DataInicio", "DataFim");
 
                     b.ToTable("Atestados");
-                });
-
-            modelBuilder.Entity("SistemaRH.Domain.Entities.CampoPersonalizado", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("AplicavelA")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Obrigatorio")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Opcoes")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Ordem")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Rotulo")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CamposPersonalizados");
                 });
 
             modelBuilder.Entity("SistemaRH.Domain.Entities.ContratoPJ", b =>
@@ -266,10 +235,6 @@ namespace SistemaRH.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("AjudaDeCusto")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CamposPersonalizadosJson")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Cep")

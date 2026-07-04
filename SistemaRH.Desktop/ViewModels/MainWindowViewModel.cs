@@ -30,11 +30,25 @@ public class MainWindowViewModel : BaseViewModel
 
     private bool _modoEscuro;
     private string _temaIcone;
+    private string _menuAtivo = "Dashboard";
+    private bool _sidebarRecolhida;
 
     public string TemaIcone
     {
         get => _temaIcone;
         set => SetProperty(ref _temaIcone, value);
+    }
+
+    public string MenuAtivo
+    {
+        get => _menuAtivo;
+        set => SetProperty(ref _menuAtivo, value);
+    }
+
+    public bool SidebarRecolhida
+    {
+        get => _sidebarRecolhida;
+        set => SetProperty(ref _sidebarRecolhida, value);
     }
 
     public ICommand DashboardCommand { get; }
@@ -47,6 +61,7 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand ConfiguracoesCommand { get; }
     public ICommand FolhaPagamentoCommand { get; }
     public ICommand AlternarTemaCommand { get; }
+    public ICommand AlternarSidebarCommand { get; }
 
     public MainWindowViewModel(
         DashboardViewModel dashboardViewModel,
@@ -84,6 +99,7 @@ public class MainWindowViewModel : BaseViewModel
         ConfiguracoesCommand = new RelayCommand(_ => MostrarConfiguracoes());
         FolhaPagamentoCommand = new RelayCommand(_ => MostrarFolhaPagamento());
         AlternarTemaCommand = new RelayCommand(_ => AlternarTema());
+        AlternarSidebarCommand = new RelayCommand(_ => SidebarRecolhida = !SidebarRecolhida);
 
         MostrarDashboard();
     }
@@ -92,6 +108,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new DashboardView { DataContext = _dashboardViewModel };
         StatusMessage = "Dashboard";
+        MenuAtivo = "Dashboard";
         _ = _dashboardViewModel.CarregarAsync();
     }
 
@@ -99,6 +116,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new EmpresasListView { DataContext = _empresasViewModel };
         StatusMessage = "Empresas";
+        MenuAtivo = "Empresas";
         _ = _empresasViewModel.CarregarAsync();
     }
 
@@ -106,6 +124,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new FuncionariosListView { DataContext = _funcionariosViewModel };
         StatusMessage = "Funcionários";
+        MenuAtivo = "Funcionarios";
         _ = _funcionariosViewModel.CarregarAsync();
     }
 
@@ -113,6 +132,7 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new FeriasView { DataContext = _feriasViewModel };
         StatusMessage = "Férias";
+        MenuAtivo = "Ferias";
         _ = _feriasViewModel.CarregarAsync();
     }
 
@@ -120,18 +140,21 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new RpaNfView { DataContext = _rpaNfViewModel };
         StatusMessage = "RPA / NF";
+        MenuAtivo = "RpaNf";
     }
 
     private void MostrarRelatorios()
     {
         CurrentView = new RelatorioComparativoView { DataContext = _relatorioViewModel };
         StatusMessage = "Relatórios";
+        MenuAtivo = "Relatorios";
     }
 
     private void MostrarAuditoria()
     {
         CurrentView = new AuditoriaView { DataContext = _auditoriaViewModel };
         StatusMessage = "Auditoria";
+        MenuAtivo = "Auditoria";
         _ = _auditoriaViewModel.CarregarAsync();
     }
 
@@ -139,12 +162,14 @@ public class MainWindowViewModel : BaseViewModel
     {
         CurrentView = new ConfiguracoesView { DataContext = _configuracoesViewModel };
         StatusMessage = "Configurações";
+        MenuAtivo = "Configuracoes";
     }
 
     private void MostrarFolhaPagamento()
     {
         CurrentView = new FolhaPagamentoView { DataContext = _folhaPagamentoViewModel };
         StatusMessage = "Folha de Pagamento";
+        MenuAtivo = "FolhaCLT";
         _ = _folhaPagamentoViewModel.CarregarAsync();
     }
 

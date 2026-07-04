@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
+using System.Text.Json;
 using System.Windows.Input;
 using SistemaRH.Application.DTOs;
 using SistemaRH.Application.Interfaces;
 using SistemaRH.Desktop.Services;
+using SistemaRH.Domain.Enums;
 
 namespace SistemaRH.Desktop.ViewModels;
 
@@ -10,6 +12,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
 {
     private readonly IFuncionarioService _funcionarioService;
     private readonly IEmpresaService _empresaService;
+    private readonly ICampoPersonalizadoService _campoPersonalizadoService;
     private readonly IDialogService _dialogService;
 
     private int _id;
@@ -20,7 +23,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     private string _razaoSocial = "";
     private string _cnpj = "";
     private string _email = "";
-    private string _emailAgil = "";
+    private string _emailEmpresa = "";
     private string _contratante = "";
     private string _telefone = "";
     private string _telefoneAgil = "";
@@ -32,7 +35,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     private decimal _valorContratado;
     private bool _temDireitoFerias;
     private bool _feriasRemuneradas;
-    private DateTime _dataNascimento = DateTime.Now;
+    private DateTime? _dataNascimento;
     private DateTime? _dataInicio;
     private DateTime? _dataFim;
     private string _validadeContrato = "";
@@ -47,6 +50,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     private bool _comissionado;
     private string _observacoes = "";
     private decimal _ajudaDeCusto;
+    private ObservableCollection<CampoPersonalizadoValorViewModel> _camposPersonalizados = new();
 
     public string Titulo => _isEdit ? "Editar Funcionário PJ" : "Novo Funcionário PJ";
     public bool PodeVerHistorico => _isEdit;
@@ -66,7 +70,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public string RazaoSocial { get => _razaoSocial; set => SetProperty(ref _razaoSocial, value); }
     public string CNPJ { get => _cnpj; set => SetProperty(ref _cnpj, FormatarCnpj(value)); }
     public string Email { get => _email; set => SetProperty(ref _email, value); }
-    public string EmailAgil { get => _emailAgil; set => SetProperty(ref _emailAgil, value); }
+    public string EmailEmpresa { get => _emailEmpresa; set => SetProperty(ref _emailEmpresa, value); }
     public string Contratante { get => _contratante; set => SetProperty(ref _contratante, value); }
     public string Telefone { get => _telefone; set => SetProperty(ref _telefone, FormatarTelefone(value)); }
     public string TelefoneAgil { get => _telefoneAgil; set => SetProperty(ref _telefoneAgil, FormatarTelefone(value)); }
@@ -78,7 +82,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public decimal ValorContratado { get => _valorContratado; set => SetProperty(ref _valorContratado, value); }
     public bool TemDireitoFerias { get => _temDireitoFerias; set => SetProperty(ref _temDireitoFerias, value); }
     public bool FeriasRemuneradas { get => _feriasRemuneradas; set => SetProperty(ref _feriasRemuneradas, value); }
-    public DateTime DataNascimento { get => _dataNascimento; set => SetProperty(ref _dataNascimento, value); }
+    public DateTime? DataNascimento { get => _dataNascimento; set => SetProperty(ref _dataNascimento, value); }
     public DateTime? DataInicio { get => _dataInicio; set => SetProperty(ref _dataInicio, value); }
     public DateTime? DataFim { get => _dataFim; set => SetProperty(ref _dataFim, value); }
     public string ValidadeContrato { get => _validadeContrato; set => SetProperty(ref _validadeContrato, value); }
@@ -94,6 +98,18 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public string Observacoes { get => _observacoes; set => SetProperty(ref _observacoes, value); }
     public decimal AjudaDeCusto { get => _ajudaDeCusto; set => SetProperty(ref _ajudaDeCusto, value); }
 
+    public ObservableCollection<CampoPersonalizadoValorViewModel> CamposPersonalizados
+    {
+        get => _camposPersonalizados;
+        set
+        {
+            if (SetProperty(ref _camposPersonalizados, value))
+                OnPropertyChanged(nameof(TemCamposPersonalizados));
+        }
+    }
+
+    public bool TemCamposPersonalizados => CamposPersonalizados.Count > 0;
+
     public ICommand SalvarCommand { get; }
     public ICommand CancelarCommand { get; }
     public ICommand AbrirHistoricoCommand { get; }
@@ -101,10 +117,12 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     public FuncionarioPJDetailViewModel(
         IFuncionarioService funcionarioService,
         IEmpresaService empresaService,
+        ICampoPersonalizadoService campoPersonalizadoService,
         IDialogService dialogService)
     {
         _funcionarioService = funcionarioService;
         _empresaService = empresaService;
+        _campoPersonalizadoService = campoPersonalizadoService;
         _dialogService = dialogService;
 
         SalvarCommand = new RelayCommand(_ => _ = SalvarAsync());
@@ -116,10 +134,10 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
     {
         _id = 0;
         _isEdit = false;
-        RazaoSocial = ""; CNPJ = ""; Email = ""; EmailAgil = ""; Contratante = ""; Telefone = ""; TelefoneAgil = "";
+        RazaoSocial = ""; CNPJ = ""; Email = ""; EmailEmpresa = ""; Contratante = ""; Telefone = ""; TelefoneAgil = "";
         Endereco = ""; Complemento = ""; Cidade = ""; Estado = ""; Cep = "";
         TemDireitoFerias = false; FeriasRemuneradas = false;
-        DataNascimento = DateTime.Now; DataInicio = null; DataFim = null;
+        DataNascimento = null; DataInicio = null; DataFim = null;
         ValidadeContrato = ""; TipoServico = ""; EmiteNF = false; DiaSolicitacaoNF = "";
         ValorServico = 0; ValorContratado = 0; Departamento = "";
         Genero = ""; Ramal = ""; DadosBancarios = ""; Comissionado = false; Observacoes = ""; AjudaDeCusto = 0;
@@ -127,6 +145,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync();
+        _ = CarregarCamposPersonalizadosAsync(null);
     }
 
     public void PrepararEdicao(FuncionarioPJDto dto)
@@ -136,7 +155,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         RazaoSocial = dto.RazaoSocial ?? dto.Nome ?? "";
         CNPJ = dto.Cnpj ?? "";
         Email = dto.Email ?? "";
-        EmailAgil = dto.EmailAgil ?? "";
+        EmailEmpresa = dto.EmailEmpresa ?? "";
         Contratante = dto.Contratante ?? "";
         Telefone = dto.Telefone ?? "";
         TelefoneAgil = dto.TelefoneAgil ?? "";
@@ -166,6 +185,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         OnPropertyChanged(nameof(Titulo));
         OnPropertyChanged(nameof(PodeVerHistorico));
         _ = CarregarEmpresasAsync(dto.EmpresaId);
+        _ = CarregarCamposPersonalizadosAsync(dto.CamposPersonalizadosJson);
     }
 
     private async Task CarregarEmpresasAsync(int empresaIdParaSelecionar = 0)
@@ -183,11 +203,34 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
         catch { }
     }
 
+    private async Task CarregarCamposPersonalizadosAsync(string? valoresJson)
+    {
+        try
+        {
+            var definicoes = await _campoPersonalizadoService.GetAplicaveisAsync(TipoFuncionario.PJ);
+            var valores = string.IsNullOrWhiteSpace(valoresJson)
+                ? new Dictionary<string, string>()
+                : JsonSerializer.Deserialize<Dictionary<string, string>>(valoresJson) ?? new();
+
+            CamposPersonalizados = new ObservableCollection<CampoPersonalizadoValorViewModel>(
+                definicoes.Select(d => new CampoPersonalizadoValorViewModel(d, valores.GetValueOrDefault(d.Id.ToString()))));
+        }
+        catch { }
+    }
+
+    private string SerializarCamposPersonalizados()
+    {
+        var valores = CamposPersonalizados.ToDictionary(c => c.CampoPersonalizadoId.ToString(), c => c.Valor);
+        return JsonSerializer.Serialize(valores);
+    }
+
     private bool ValidarCampos()
     {
         return !string.IsNullOrWhiteSpace(RazaoSocial) &&
                !string.IsNullOrWhiteSpace(CNPJ) &&
-               EmpresaSelecionada != null;
+               EmpresaSelecionada != null &&
+               DataNascimento.HasValue &&
+               CamposPersonalizados.All(c => c.PreenchidoValido);
     }
 
     private async Task SalvarAsync()
@@ -209,7 +252,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
                 RazaoSocial = RazaoSocial,
                 Cnpj = CNPJ,
                 Email = Email,
-                EmailAgil = EmailAgil,
+                EmailEmpresa = EmailEmpresa,
                 Contratante = Contratante,
                 Telefone = Telefone,
                 TelefoneAgil = TelefoneAgil,
@@ -220,7 +263,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
                 Cep = Cep,
                 TemDireitoFerias = TemDireitoFerias,
                 FeriasRemuneradas = FeriasRemuneradas,
-                DataNascimento = DataNascimento,
+                DataNascimento = DataNascimento!.Value,
                 DataInicio = DataInicio,
                 DataFim = DataFim,
                 ValidadeContrato = ValidadeContrato,
@@ -236,6 +279,7 @@ public class FuncionarioPJDetailViewModel : BaseViewModel
                 Comissionado = Comissionado,
                 Observacoes = Observacoes,
                 AjudaDeCusto = AjudaDeCusto,
+                CamposPersonalizadosJson = SerializarCamposPersonalizados(),
                 EmpresaId = EmpresaSelecionada!.Id
             };
 

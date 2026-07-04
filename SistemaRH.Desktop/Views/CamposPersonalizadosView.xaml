@@ -1,0 +1,103 @@
+<Window x:Class="SistemaRH.Desktop.Views.CamposPersonalizadosView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="Campos Personalizados" Height="520" Width="720" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid Background="{DynamicResource SurfaceBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="15">
+            <StackPanel>
+                <TextBlock Text="Campos Personalizados" Foreground="{DynamicResource HeaderForeground}" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="Campos extras exibidos no cadastro de Funcionários (CLT, PJ e Estagiário)" Foreground="{DynamicResource HeaderSubForeground2}" FontSize="12" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1" Background="{DynamicResource ActionBarBackground}" Padding="15,10" BorderBrush="{DynamicResource BorderActionBar}" BorderThickness="0,0,0,1">
+            <Button Content="+ Novo Campo" Command="{Binding NovoCommand}"
+                    Background="{DynamicResource BtnPrimaryBackground}" Foreground="{DynamicResource BtnForeground}" Padding="15,8"
+                    FontWeight="Bold" Cursor="Hand" HorizontalAlignment="Left"/>
+        </Border>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Campos}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  SelectionMode="Single" GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column" RowHeight="44"
+                  Background="{DynamicResource DataGridBackground}"
+                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                  BorderThickness="0" Margin="15,10">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Rótulo" Binding="{Binding Rotulo}" Width="*" MinWidth="140"/>
+                <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="100"/>
+                <DataGridTextColumn Header="Aplicável a" Binding="{Binding AplicavelATexto}" Width="110"/>
+                <DataGridTemplateColumn Header="Obrigatório" Width="90">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Sim" Foreground="{DynamicResource AccentGreenForeground}" FontWeight="SemiBold" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Obrigatorio}" Value="False">
+                                                <Setter Property="Text" Value="Não"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Ativo" Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="Sim" Foreground="{DynamicResource AccentGreenForeground}" FontWeight="SemiBold" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Ativo}" Value="False">
+                                                <Setter Property="Text" Value="Não"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource TextMuted}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Ações" Width="160">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button Content="Editar" Padding="8,4" Margin="0,0,5,0"
+                                        Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
+                                        Command="{Binding DataContext.EditarCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Cursor="Hand"/>
+                                <Button Content="Excluir" Padding="8,4"
+                                        Background="{DynamicResource BtnDangerBackground}" Foreground="{DynamicResource BtnForeground}" FontSize="11"
+                                        Command="{Binding DataContext.ExcluirCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Cursor="Hand"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="3" Padding="15">
+            <Button Content="Fechar" Padding="15,8" Background="{DynamicResource BtnNavBackground}" Foreground="{DynamicResource BtnForeground}" Width="100" HorizontalAlignment="Right" Click="Fechar_Click"/>
+        </Border>
+    </Grid>
+</Window>

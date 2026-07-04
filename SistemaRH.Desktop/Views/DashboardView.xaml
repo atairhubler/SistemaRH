@@ -12,7 +12,20 @@
         </Grid.RowDefinitions>
 
         <!-- Título -->
-        <TextBlock Grid.Row="0" Text="Dashboard" FontSize="24" FontWeight="Bold" Margin="20,20,20,20" Foreground="{DynamicResource AccentBlueForeground}"/>
+        <Grid Grid.Row="0" Margin="20,20,20,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Dashboard" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentBlueForeground}" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Empresa:" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="{DynamicResource TextLabel}"/>
+                <ComboBox Width="220" Height="34" Padding="10,0" VerticalContentAlignment="Center"
+                          ItemsSource="{Binding Empresas}"
+                          SelectedItem="{Binding EmpresaSelecionada}"
+                          DisplayMemberPath="RazaoSocial"/>
+            </StackPanel>
+        </Grid>
 
         <!-- Cards Resumo -->
         <Grid Grid.Row="1" Margin="20,0,20,20">

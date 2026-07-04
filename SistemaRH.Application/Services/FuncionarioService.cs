@@ -111,7 +111,7 @@ public class FuncionarioService : IFuncionarioService
             Rg = dto.Rg ?? "",
             Codigo = dto.Codigo ?? "",
             Email = dto.Email ?? "",
-            EmailAgil = dto.EmailAgil ?? "",
+            EmailEmpresa = dto.EmailEmpresa ?? "",
             Contratante = dto.Contratante ?? "",
             Telefone = dto.Telefone ?? "",
             Endereco = dto.Endereco ?? "",
@@ -125,6 +125,7 @@ public class FuncionarioService : IFuncionarioService
             Comissionado = dto.Comissionado,
             Observacoes = dto.Observacoes ?? "",
             AjudaDeCusto = dto.AjudaDeCusto,
+            CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
             Cargo = dto.Cargo ?? "",
             Departamento = dto.Departamento ?? "",
             DataAdmissao = dto.DataAdmissao,
@@ -167,7 +168,7 @@ public class FuncionarioService : IFuncionarioService
             Cnpj = dto.Cnpj ?? "",
             RazaoSocial = dto.RazaoSocial ?? dto.Nome ?? "",
             Email = dto.Email ?? "",
-            EmailAgil = dto.EmailAgil ?? "",
+            EmailEmpresa = dto.EmailEmpresa ?? "",
             Contratante = dto.Contratante ?? "",
             Telefone = dto.Telefone ?? "",
             TelefoneAgil = dto.TelefoneAgil ?? "",
@@ -194,6 +195,7 @@ public class FuncionarioService : IFuncionarioService
             ValorServico = dto.ValorServico,
             ValorContratado = dto.ValorContratado,
             Departamento = dto.Departamento ?? "",
+            CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
             EmpresaId = empresaId,
             Status = StatusFuncionario.Ativo,
             Tipo = TipoFuncionario.PJ,
@@ -227,7 +229,7 @@ public class FuncionarioService : IFuncionarioService
             Rg = dto.Rg ?? "",
             Codigo = dto.Codigo ?? "",
             Email = dto.Email ?? "",
-            EmailAgil = dto.EmailAgil ?? "",
+            EmailEmpresa = dto.EmailEmpresa ?? "",
             Contratante = dto.Contratante ?? "",
             Telefone = dto.Telefone ?? "",
             Endereco = dto.Endereco ?? "",
@@ -248,6 +250,7 @@ public class FuncionarioService : IFuncionarioService
             DataNascimento = dto.DataNascimento,
             Bolsa = dto.Bolsa,
             ComplementoSalarial = dto.ComplementoSalarial,
+            CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}",
             EmpresaId = empresaId,
             Status = StatusFuncionario.Ativo,
             Tipo = TipoFuncionario.Estagiario,
@@ -279,7 +282,7 @@ public class FuncionarioService : IFuncionarioService
         clt.Rg = dto.Rg ?? "";
         clt.Codigo = dto.Codigo ?? "";
         clt.Email = dto.Email ?? "";
-        clt.EmailAgil = dto.EmailAgil ?? "";
+        clt.EmailEmpresa = dto.EmailEmpresa ?? "";
         clt.Contratante = dto.Contratante ?? "";
         clt.Telefone = dto.Telefone ?? "";
         clt.Endereco = dto.Endereco ?? "";
@@ -303,6 +306,7 @@ public class FuncionarioService : IFuncionarioService
         clt.DataNascimento = dto.DataNascimento;
         clt.Ctps = dto.Ctps ?? "";
         clt.PisPassep = dto.PisPassep ?? "";
+        clt.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
         clt.EmpresaId = dto.EmpresaId;
         clt.DataAtualizacao = DateTime.Now;
 
@@ -320,7 +324,7 @@ public class FuncionarioService : IFuncionarioService
         pj.RazaoSocial = dto.RazaoSocial ?? dto.Nome ?? "";
         pj.Cnpj = dto.Cnpj ?? "";
         pj.Email = dto.Email ?? "";
-        pj.EmailAgil = dto.EmailAgil ?? "";
+        pj.EmailEmpresa = dto.EmailEmpresa ?? "";
         pj.Contratante = dto.Contratante ?? "";
         pj.Telefone = dto.Telefone ?? "";
         pj.TelefoneAgil = dto.TelefoneAgil ?? "";
@@ -347,6 +351,7 @@ public class FuncionarioService : IFuncionarioService
         pj.ValorServico = dto.ValorServico;
         pj.ValorContratado = dto.ValorContratado;
         pj.Departamento = dto.Departamento ?? "";
+        pj.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
         pj.EmpresaId = dto.EmpresaId;
         pj.DataAtualizacao = DateTime.Now;
 
@@ -365,7 +370,7 @@ public class FuncionarioService : IFuncionarioService
         estagiario.Rg = dto.Rg ?? "";
         estagiario.Codigo = dto.Codigo ?? "";
         estagiario.Email = dto.Email ?? "";
-        estagiario.EmailAgil = dto.EmailAgil ?? "";
+        estagiario.EmailEmpresa = dto.EmailEmpresa ?? "";
         estagiario.Contratante = dto.Contratante ?? "";
         estagiario.Telefone = dto.Telefone ?? "";
         estagiario.Endereco = dto.Endereco ?? "";
@@ -386,6 +391,7 @@ public class FuncionarioService : IFuncionarioService
         estagiario.DataAdmissao = dto.DataAdmissao;
         estagiario.DataDemissao = dto.DataDemissao;
         estagiario.DataNascimento = dto.DataNascimento;
+        estagiario.CamposPersonalizadosJson = dto.CamposPersonalizadosJson ?? "{}";
         estagiario.EmpresaId = dto.EmpresaId;
         estagiario.DataAtualizacao = DateTime.Now;
 
